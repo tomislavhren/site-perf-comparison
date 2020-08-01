@@ -5,6 +5,8 @@ import * as service from './service';
 function App() {
   const inputRef = React.useRef(null);
   const [logs, setLogs] = React.useState([]);
+  const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(null);
+  const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(null);
 
   
   const handleSubmit = React.useCallback(async (e) => {
@@ -36,10 +38,17 @@ function App() {
     addLogEntry(`Running tests for ${clonedWebsiteUrl}.`);
 
     setTimeout(async () => {
-      await service.getPerformanceResultsByJobId(realWebsiteJobId);
-      addLogEntry('Test completed successfully.');
-      await service.getPerformanceResultsByJobId(clonedWebsiteJobId);
-      addLogEntry('Test completed successfully.');
+      const realWebsiteResaults = await service.getPerformanceResultsByJobId(realWebsiteJobId);
+      addLogEntry(`Test for ${url} completed successfully.`);
+      const clonedWebsiteResaults = await service.getPerformanceResultsByJobId(clonedWebsiteJobId);
+      addLogEntry(`Test for ${clonedWebsiteUrl} completed successfully.`);
+      
+      const realWebsitePageTimings = realWebsiteResaults.output.har.log.pages[0];
+      const clonedWebsitePageTimings = clonedWebsiteResaults.output.har.log.pages[0];
+
+      setClonedWebsitePageTimings(clonedWebsitePageTimings)
+      setRealWebsitePageTimings(realWebsitePageTimings)
+      setLogs([]);
     }, 30000);
 
   }, [setLogs]);
@@ -55,10 +64,30 @@ function App() {
           <div className="logs">
             <div className="logs-title">Test Sequence:</div>
             <ul>
-              {logs.map(l => 
-                <li className="log-entry" key={l}>{l}</li>
+              {logs.map((l, index) => 
+                <li className="log-entry" key={`entry${index}`}>{l}</li>
               )}
             </ul>
+          </div>
+        }
+        {realWebsitePageTimings && clonedWebsitePageTimings &&
+          <div className="page-timings-container">
+            <div className="page-timings">
+              URL: <strong>{realWebsitePageTimings._url}</strong>
+              <ul>
+                {Object.keys(realWebsitePageTimings.pageTimings).map((key) => (
+                  <li key={`real-${key}`}>{key}: <strong>{realWebsitePageTimings.pageTimings[key]}</strong></li>
+                ))}
+              </ul>
+            </div>
+            <div className="page-timings">
+              URL: <strong>{clonedWebsitePageTimings._url}</strong>
+              <ul>
+                {Object.keys(clonedWebsitePageTimings.pageTimings).map((key) => (
+                  <li key={`cloned-${key}`}>{key}: <strong>{clonedWebsitePageTimings.pageTimings[key]}</strong></li>
+                ))}
+              </ul>
+            </div>
           </div>
         }
       </form>

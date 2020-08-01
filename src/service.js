@@ -2,15 +2,7 @@ const headers = {
     'Content-Type': 'application/json'
 };
 
-const wait = (delay, retries) => {
-    let i = 0;
-    return (action) => {
-        i++;
-        if(i <= retries) {
-            setTimeout(action, delay);
-        }
-    }
-};
+const wait = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
 export const createPerformanceTestJob = async (url) => {
     const response = await fetch(`/api/add`, {
@@ -31,10 +23,11 @@ export const getPerformanceResultsByJobId = async (jobId) => {
     const performanceResults = await response.json();
 
     if (performanceResults.state.includes('TEST')) {
-        return wait(2000, 5)(getPerformanceResultsByJobId.bind(null, jobId));
+        await wait(2000);
+        return await getPerformanceResultsByJobId(jobId);
+    } else {
+        return performanceResults;
     }
-
-    return performanceResults;
 }
 
 export const cloneWebsite = async  (url) => {
