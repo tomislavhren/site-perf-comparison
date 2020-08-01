@@ -2,10 +2,13 @@ const headers = {
     'Content-Type': 'application/json'
 };
 
+const sitePerformanceApiPrefix = process.env.NODE_ENV === 'development' ? '' : 'http://64.227.57.174';
+const clonerApiPrefix = process.env.NODE_ENV === 'development' ? '' : 'http://178.128.158.164';
+
 const wait = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
 export const createPerformanceTestJob = async (url) => {
-    const response = await fetch(`/api/add`, {
+    const response = await fetch(`${sitePerformanceApiPrefix}/api/add`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ url })
@@ -17,7 +20,7 @@ export const createPerformanceTestJob = async (url) => {
 }
 
 export const getPerformanceResultsByJobId = async (jobId) => {
-    const response = await fetch(`/api/results?job=${jobId}`, {
+    const response = await fetch(`${sitePerformanceApiPrefix}/api/results?job=${jobId}`, {
         headers,
     });
     const performanceResults = await response.json();
@@ -31,7 +34,7 @@ export const getPerformanceResultsByJobId = async (jobId) => {
 }
 
 export const cloneWebsite = async  (url) => {
-    const response = await fetch('/api/full', {
+    const response = await fetch(`${clonerApiPrefix}/api/full`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ url })
