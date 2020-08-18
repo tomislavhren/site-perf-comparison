@@ -1,0 +1,117 @@
+.page-timings {
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: white;
+    margin: 1rem .5rem;
+    padding: 1rem;
+    box-shadow: 0px 0px 25px 1px #cacaca;
+    border-radius: .25rem;
+    flex: 1;
+}
+
+.server {
+    padding-bottom: 1.5rem;
+    display: flex;
+}
+
+.server-logo {
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+}
+
+.server-logo img {
+    border-radius: 50%;
+}
+
+.server-info__name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.server-info__location .location__label {
+    font-weight: 300;
+    font-size: 1rem;
+    margin-bottom: .5rem;
+}
+
+.server-info__location .location__name {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.timing-results {
+    display: flex;
+    justify-content: space-around;
+    padding: 1.5rem 0;
+}
+
+.timing-item {
+    display: flex;
+    align-items: center;
+    flex-flow: column nowrap;
+    padding: 0 1rem;
+}
+
+.timing-item__result {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #25A6CA;
+}
+
+.timing-item__label {
+    font-size: 1.125rem;
+    font-weight: 300;
+    padding: .5rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.timing-item__diff {
+    padding: .25rem 1rem;
+    color: white;
+    text-transform: uppercase;
+    border-radius: 2rem;
+    font-size: .75rem;
+    font-weight: 500;
+}
+
+.timing-item__diff.timing-item__diff--positive {
+    background-color: #84B80D;
+}
+
+.timing-item__diff.timing-item__diff--negative {
+    background-color: rgb(155, 10, 10);
+}
+
+.timing-item__label .icon {
+    margin-left: .25rem;
+    color: #25A6CA;
+}
+
+.icon.tooltip {
+    font-size: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.icon.tooltip > .material-icons {
+    font-size: inherit;
+}
+
+.performance-banner {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.performance-banner__title {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.performance-banner__subTitle {
+    font-size: 1.25rem;
+    font-weight: 300;
+    padding: 1rem 0;
+}

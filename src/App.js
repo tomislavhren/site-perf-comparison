@@ -1,13 +1,19 @@
 import React from 'react';
 import './App.css';
 import * as service from './service';
+import PageTiming from './PageTiming';
+import pageTimingData1 from './pageTiming1.json';
+import pageTimingData2 from './pageTiming2.json';
+import * as utils from './utils';
+import PerformanceBanner from './PerformanceBanner';
 
 function App() {
   const inputRef = React.useRef(null);
   const [logs, setLogs] = React.useState([]);
+  // const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(pageTimingData1.output);
+  // const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(pageTimingData2.output);
   const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(null);
   const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(null);
-
   
   const handleSubmit = React.useCallback(async (e) => {
     e.preventDefault();
@@ -43,22 +49,28 @@ function App() {
       const clonedWebsiteResaults = await service.getPerformanceResultsByJobId(clonedWebsiteJobId);
       addLogEntry(`Test for ${clonedWebsiteUrl} completed successfully.`);
       
-      const realWebsitePageTimings = realWebsiteResaults.output.har.log.pages[0];
-      const clonedWebsitePageTimings = clonedWebsiteResaults.output.har.log.pages[0];
+      const realWebsitePageTimings = realWebsiteResaults.output;
+      const clonedWebsitePageTimings = clonedWebsiteResaults.output;
 
       setClonedWebsitePageTimings(clonedWebsitePageTimings)
       setRealWebsitePageTimings(realWebsitePageTimings)
       setLogs([]);
-    }, 30000);
+    }, 20000);
 
   }, [setLogs]);
+
+  const clonedWebsiteProps = utils.getWebsitePerformanceProps(clonedWebsitePageTimings);
+  const realWebsiteProps = utils.getWebsitePerformanceProps(realWebsitePageTimings);
 
   return (
     <div className="App">
       <form onSubmit={handleSubmit} className="form">
         <div className="input-url">
           <input ref={inputRef} className="input" placeholder="Enter URL to test" type="text" name="url" />
-          <button type="submit" className="run-test">Run test</button>
+          <button type="submit" className="run-test">
+            <span className="material-icons">timer</span>
+            Run test
+          </button>
         </div>
        {logs && logs.length > 0 && 
           <div className="logs">
@@ -70,27 +82,39 @@ function App() {
             </ul>
           </div>
         }
-        {realWebsitePageTimings && clonedWebsitePageTimings &&
-          <div className="page-timings-container">
-            <div className="page-timings">
-              URL: <strong>{realWebsitePageTimings._url}</strong>
-              <ul>
-                {Object.keys(realWebsitePageTimings.pageTimings).map((key) => (
-                  <li key={`real-${key}`}>{key}: <strong>{realWebsitePageTimings.pageTimings[key]}</strong></li>
-                ))}
-              </ul>
-            </div>
-            <div className="page-timings">
-              URL: <strong>{clonedWebsitePageTimings._url}</strong>
-              <ul>
-                {Object.keys(clonedWebsitePageTimings.pageTimings).map((key) => (
-                  <li key={`cloned-${key}`}>{key}: <strong>{clonedWebsitePageTimings.pageTimings[key]}</strong></li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        }
       </form>
+
+      
+      {realWebsiteProps && clonedWebsiteProps ?
+        <>
+          <PerformanceBanner diff={utils.calculateDiffPercentage(clonedWebsiteProps.pageLoadTime, realWebsiteProps.pageLoadTime)} />
+          <div className="page-timings-container">
+            <PageTiming
+              serverName="Rocket"
+              serverLocation="Atlanta, Georgia, USA"
+              {...clonedWebsiteProps}
+              ttfb2={realWebsiteProps.ttfb}
+              firstPaint2={realWebsiteProps.firstPaint}
+              pageLoadTime2={realWebsiteProps.pageLoadTime}
+            />
+            <PageTiming 
+              serverName="TBD"
+              serverLocation="TBD"
+              {...realWebsiteProps}
+            />
+          </div>
+        </> :
+        <div className="page-timings-container">
+          <PageTiming
+            serverName="Rocket"
+            serverLocation="Atlanta, Georgia, USA"
+          />
+          <PageTiming 
+            serverName="TBD"
+            serverLocation="TBD"
+          />
+        </div>
+      }
     </div>
   );
 }
