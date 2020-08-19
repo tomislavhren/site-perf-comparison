@@ -6,58 +6,77 @@ import pageTimingData1 from './pageTiming1.json';
 import pageTimingData2 from './pageTiming2.json';
 import * as utils from './utils';
 import PerformanceBanner from './PerformanceBanner';
+import TestSequence from './TestSequence';
+import { testSequence, testSequenceStatus } from './constants';
+
+const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }), {});
+
 
 function App() {
   const inputRef = React.useRef(null);
-  const [logs, setLogs] = React.useState([]);
   // const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(pageTimingData1.output);
   // const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(pageTimingData2.output);
   const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(null);
   const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(null);
-  
+  const [testSequenceProgress, setTestSequenceProgress] = React.useState(defaultTestSequenceProgress);
+
   const handleSubmit = React.useCallback(async (e) => {
     e.preventDefault();
     const url = inputRef.current && inputRef.current.value;
     if(!url) {
       return;
     }
-    
-    const logs = [];
-    const addLogEntry = (entry) => {
-      logs.push(entry);
-      setLogs([...logs]);
+
+    const updateTestSequenceProgress = (key, status) => {
+      setTestSequenceProgress(prevState => ({ ...prevState, [key]: status }));
     };
 
-    addLogEntry(`Cloning website: ${url}`);
+    updateTestSequenceProgress(testSequence.VERIFY_URL, testSequenceStatus.IN_PROGRESS);
+    updateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, testSequenceStatus.IN_PROGRESS);
+    updateTestSequenceProgress(testSequence.DOWNLOAD_HTML, testSequenceStatus.IN_PROGRESS);
+    utils.log(`Cloning website: ${url}`);
     const clonedWebsiteUrl = await service.cloneWebsite(url);
-    addLogEntry(`Website cloned successfully`);
+    updateTestSequenceProgress(testSequence.VERIFY_URL, testSequenceStatus.DONE);
+    updateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, testSequenceStatus.DONE);
+    updateTestSequenceProgress(testSequence.DOWNLOAD_HTML, testSequenceStatus.DONE);
+    utils.log(`Website cloned successfully`);
 
-    addLogEntry(`Creating a performance test job for: ${url}`);
+    updateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, testSequenceStatus.IN_PROGRESS);
+    updateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, testSequenceStatus.DONE);
+
+    updateTestSequenceProgress(testSequence.INIT_CLONED_SITE, testSequenceStatus.IN_PROGRESS);
+
+    utils.log(`Creating a performance test job for: ${url}`);
     const realWebsiteJobId = await service.createPerformanceTestJob(url);
-    addLogEntry(`Performance test job created successfully.`);
+    utils.log(`Performance test job created successfully.`);
     
-    addLogEntry(`Creating a performance test job for: ${clonedWebsiteUrl}`);
+    utils.log(`Creating a performance test job for: ${clonedWebsiteUrl}`);
     const clonedWebsiteJobId = await service.createPerformanceTestJob(clonedWebsiteUrl);
-    addLogEntry(`Performance test job created successfully.`);
+    utils.log(`Performance test job created successfully.`);
 
-    addLogEntry(`Running tests for ${url}.`);
-    addLogEntry(`Running tests for ${clonedWebsiteUrl}.`);
+    updateTestSequenceProgress(testSequence.INIT_CLONED_SITE, testSequenceStatus.DONE);
+
+    utils.log(`Running tests for ${url}.`);
+    utils.log(`Running tests for ${clonedWebsiteUrl}.`);
+
+    updateTestSequenceProgress(testSequence.START_TIMER, testSequenceStatus.IN_PROGRESS);
 
     setTimeout(async () => {
       const realWebsiteResaults = await service.getPerformanceResultsByJobId(realWebsiteJobId);
-      addLogEntry(`Test for ${url} completed successfully.`);
+      utils.log(`Test for ${url} completed successfully.`);
       const clonedWebsiteResaults = await service.getPerformanceResultsByJobId(clonedWebsiteJobId);
-      addLogEntry(`Test for ${clonedWebsiteUrl} completed successfully.`);
+      utils.log(`Test for ${clonedWebsiteUrl} completed successfully.`);
       
       const realWebsitePageTimings = realWebsiteResaults.output;
       const clonedWebsitePageTimings = clonedWebsiteResaults.output;
 
+      updateTestSequenceProgress(testSequence.START_TIMER, testSequenceStatus.DONE);
+
       setClonedWebsitePageTimings(clonedWebsitePageTimings)
       setRealWebsitePageTimings(realWebsitePageTimings)
-      setLogs([]);
     }, 20000);
 
-  }, [setLogs]);
+  }, [setClonedWebsitePageTimings, setRealWebsitePageTimings]);
 
   const clonedWebsiteProps = utils.getWebsitePerformanceProps(clonedWebsitePageTimings);
   const realWebsiteProps = utils.getWebsitePerformanceProps(realWebsitePageTimings);
@@ -72,16 +91,7 @@ function App() {
             Run test
           </button>
         </div>
-       {logs && logs.length > 0 && 
-          <div className="logs">
-            <div className="logs-title">Test Sequence:</div>
-            <ul>
-              {logs.map((l, index) => 
-                <li className="log-entry" key={`entry${index}`}>{l}</li>
-              )}
-            </ul>
-          </div>
-        }
+        <TestSequence testSequenceProgress={testSequenceProgress} />
       </form>
 
       

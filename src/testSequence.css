@@ -1,0 +1,28 @@
+.test-sequence {
+    margin-top: 2rem;
+}
+
+.test-sequence__list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.test-sequence__title {
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.test-sequence__entry {
+    padding: .25rem 0;
+    font-weight: 200;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.test-sequence__entry .material-icons {
+    margin-right: .5rem;
+    color: #b9b9b9;
+}

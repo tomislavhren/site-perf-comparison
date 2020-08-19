@@ -32,3 +32,7 @@ export const toPercentageString = (val) => {
     const perc = Math.abs(Math.round(val*100));
     return `${perc}%`;
 };
+
+export const log = (entry) => {
+    process.env.NODE_ENV === 'development' && console.log(entry);
+}

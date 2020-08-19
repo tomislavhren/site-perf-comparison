@@ -65,9 +65,13 @@ input:-webkit-autofill:active {
 }
 
 .text-success {
-  color: #84B80D; 
+  color: #84B80D !important; 
 }
 
 .text-danger {
-  color: rgb(155, 10, 10);
+  color: rgb(155, 10, 10) !important;
+}
+
+.text-default {
+  color: black !important;
 }
