@@ -7,6 +7,8 @@ import pageTimingData2 from './pageTiming2.json';
 import * as utils from './utils';
 import PerformanceBanner from './PerformanceBanner';
 import TestSequence from './TestSequence';
+import Timer from './Timer';
+import SetupSuccessful from './SetupSuccessful';
 import { testSequence, testSequenceStatus } from './constants';
 
 const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }), {});
@@ -14,11 +16,17 @@ const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) 
 
 function App() {
   const inputRef = React.useRef(null);
+  const timer = React.useRef();
   // const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(pageTimingData1.output);
   // const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(pageTimingData2.output);
   const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(null);
   const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(null);
   const [testSequenceProgress, setTestSequenceProgress] = React.useState(defaultTestSequenceProgress);
+  const [setupSuccessful, setSetupSuccessful] = React.useState(false);
+
+  const handleOnTimerMount = React.useCallback((controls) => {
+    timer.current = controls
+  }, []);
 
   const handleSubmit = React.useCallback(async (e) => {
     e.preventDefault();
@@ -60,6 +68,7 @@ function App() {
     utils.log(`Running tests for ${clonedWebsiteUrl}.`);
 
     updateTestSequenceProgress(testSequence.START_TIMER, testSequenceStatus.IN_PROGRESS);
+    timer.current.startTimer();
 
     setTimeout(async () => {
       const realWebsiteResaults = await service.getPerformanceResultsByJobId(realWebsiteJobId);
@@ -71,12 +80,14 @@ function App() {
       const clonedWebsitePageTimings = clonedWebsiteResaults.output;
 
       updateTestSequenceProgress(testSequence.START_TIMER, testSequenceStatus.DONE);
+      timer.current.resetTimer();
+      setSetupSuccessful(true);
 
       setClonedWebsitePageTimings(clonedWebsitePageTimings)
       setRealWebsitePageTimings(realWebsitePageTimings)
     }, 20000);
 
-  }, [setClonedWebsitePageTimings, setRealWebsitePageTimings]);
+  }, [setSetupSuccessful, setClonedWebsitePageTimings, setRealWebsitePageTimings]);
 
   const clonedWebsiteProps = utils.getWebsitePerformanceProps(clonedWebsitePageTimings);
   const realWebsiteProps = utils.getWebsitePerformanceProps(realWebsitePageTimings);
@@ -91,7 +102,13 @@ function App() {
             Run test
           </button>
         </div>
-        <TestSequence testSequenceProgress={testSequenceProgress} />
+        {!setupSuccessful ?
+          <>
+            <TestSequence testSequenceProgress={testSequenceProgress} />
+            <Timer onMount={handleOnTimerMount} />
+          </> :
+          <SetupSuccessful />
+        }
       </form>
 
       

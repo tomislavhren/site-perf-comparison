@@ -1,0 +1,12 @@
+.setup-successful {
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.setup-successful .material-icons {
+    line-height: inherit;
+    font-size: 1.5rem;
+    margin-left: .25rem;
+}
