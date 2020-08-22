@@ -28,8 +28,8 @@ function App() {
   const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(null);
   const [testSequenceProgress, setTestSequenceProgress] = React.useState(defaultTestSequenceProgress);
   
-  const handleOnTimerMount = React.useCallback((timer) => {
-    timer.current = timer;
+  const handleOnTimerMount = React.useCallback((el) => {
+    timer.current = el;
   }, []);
 
   const handleInputChange = React.useCallback(e => {
