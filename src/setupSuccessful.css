@@ -3,10 +3,28 @@
     display: flex;
     align-items: center;
     margin-bottom: 2rem;
+    font-weight: bold;
 }
 
 .setup-successful .material-icons {
     line-height: inherit;
     font-size: 1.5rem;
     margin-left: .25rem;
+}
+
+.setup-successful .divider {
+    height: 24px;
+    width: 1px;
+    background-color: #cecece;
+    margin: 0 1rem;
+}
+
+.setup-successful__attempt {
+    display: flex;
+    align-items: center;
+}
+
+.setup-successful__attempt .icon {
+    margin-left: .25rem;
+    color: #25A6CA;
 }

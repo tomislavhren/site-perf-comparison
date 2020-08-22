@@ -16,36 +16,49 @@ const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) 
 const wait = (s) => new Promise(resolve => setTimeout(resolve, s*1000));
 
 function App() {
-  const inputRef = React.useRef(null);
-  const timer = React.useRef();
   // const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(pageTimingData1.output);
   // const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(pageTimingData2.output);
+  const timer = React.useRef();
+
+  const [url, setUrl] = React.useState('');
+  const [setupSuccessful, setSetupSuccessful] = React.useState(false);
+  const [testAttempt, setTestAttempt] = React.useState({});
+  
   const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(null);
   const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(null);
   const [testSequenceProgress, setTestSequenceProgress] = React.useState(defaultTestSequenceProgress);
-  const [setupSuccessful, setSetupSuccessful] = React.useState(false);
-
-  const handleOnTimerMount = React.useCallback((controls) => {
-    timer.current = controls
+  
+  const handleOnTimerMount = React.useCallback((timer) => {
+    timer.current = timer;
   }, []);
+
+  const handleInputChange = React.useCallback(e => {
+    setUrl(e.target.value);
+  }, [setUrl])
 
   const handleSubmit = React.useCallback(async (e) => {
     e.preventDefault();
-    const url = inputRef.current && inputRef.current.value;
-    if(!url) {
+    const { origin } = new URL(url);
+    if(!origin || origin === 'null') {
+      console.error(`Something is wrong with the URL: ${url}`)
       return;
     }
+
+    setSetupSuccessful(false);
+    setRealWebsitePageTimings(null);
+    setClonedWebsitePageTimings(null);
+    setTestSequenceProgress({ ...defaultTestSequenceProgress });
 
     const updateTestSequenceProgress = (key, status) => {
       setTestSequenceProgress(prevState => ({ ...prevState, [key]: status }));
     };
 
-    const clonedWebsiteUrl = await service.cloneWebsite(url);
-    const realWebsiteJobId = await service.createPerformanceTestJob(url);
-    const clonedWebsiteJobId = await service.createPerformanceTestJob(clonedWebsiteUrl);
+    setTestAttempt(prev => ({...prev, [url]: prev[url] ? prev[url] + 1 : 1 }));
 
     updateTestSequenceProgress(testSequence.VERIFY_URL, testSequenceStatus.IN_PROGRESS);
-    await wait(3);
+    const clonedWebsiteUrl = await service.cloneWebsite(origin);
+    const realWebsiteJobId = await service.createPerformanceTestJob(origin);
+    const clonedWebsiteJobId = await service.createPerformanceTestJob(clonedWebsiteUrl);
     updateTestSequenceProgress(testSequence.VERIFY_URL, testSequenceStatus.DONE);
 
     updateTestSequenceProgress(testSequence.DOWNLOAD_HTML, testSequenceStatus.IN_PROGRESS);
@@ -78,23 +91,24 @@ function App() {
       timer.current.resetTimer();
       setSetupSuccessful(true);
 
-      setClonedWebsitePageTimings(clonedWebsitePageTimings)
-      setRealWebsitePageTimings(realWebsitePageTimings)
+      setClonedWebsitePageTimings(clonedWebsitePageTimings);
+      setRealWebsitePageTimings(realWebsitePageTimings);
     }, 10000);
 
-  }, [setSetupSuccessful, setClonedWebsitePageTimings, setRealWebsitePageTimings]);
+  }, [url, setSetupSuccessful, setClonedWebsitePageTimings, setRealWebsitePageTimings]);
 
   const clonedWebsiteProps = utils.getWebsitePerformanceProps(clonedWebsitePageTimings);
   const realWebsiteProps = utils.getWebsitePerformanceProps(realWebsitePageTimings);
 
+  const attemptNumber = testAttempt[url] || 0;
   return (
     <div className="App">
       <form onSubmit={handleSubmit} className="form">
         <div className="input-url">
-          <input ref={inputRef} className="input" placeholder="Enter URL to test" type="text" name="url" />
+          <input value={url} onChange={handleInputChange} className="input" placeholder="Enter URL to test" type="text" name="url" />
           <button type="submit" className="run-test">
             <span className="material-icons">timer</span>
-            Run test
+            {attemptNumber > 0 ? 'Rerun test' : 'Run test'}
           </button>
         </div>
         {!setupSuccessful ?
@@ -102,7 +116,7 @@ function App() {
             <TestSequence testSequenceProgress={testSequenceProgress} />
             <Timer onMount={handleOnTimerMount} />
           </> :
-          <SetupSuccessful />
+          <SetupSuccessful attemptNumber={attemptNumber} />
         }
       </form>
 
