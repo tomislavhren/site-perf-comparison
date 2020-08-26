@@ -23,7 +23,7 @@ const TimingItem = ({
 
     return (
         <div className="timing-item">
-            <div className="timing-item__result">{result} ms</div>
+            <div className="timing-item__result">{result ? `${result} ms` : '-'}</div>
             <div className="timing-item__label">
                 <span>{label}</span>
                 {tooltipText &&

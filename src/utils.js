@@ -36,3 +36,5 @@ export const toPercentageString = (val) => {
 export const log = (entry) => {
     process.env.NODE_ENV === 'development' && console.log(entry);
 }
+
+export const isEmpty = (obj = {}) => Object.keys(obj).length === 0;
