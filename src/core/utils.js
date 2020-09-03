@@ -38,3 +38,5 @@ export const log = (entry) => {
 }
 
 export const isEmpty = (obj = {}) => Object.keys(obj).length === 0;
+
+export const wait = delay => new Promise(resolve => setTimeout(resolve, delay * 1000));

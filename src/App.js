@@ -11,8 +11,6 @@ import { testSequence, testSequenceStatus } from './core/constants';
 
 const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }), {});
 
-const wait = (s) => new Promise(resolve => setTimeout(resolve, s*1000));
-
 function App() {
   const timer = React.useRef();
 
@@ -66,7 +64,7 @@ function App() {
 
     const waitAndUpdateTestSequenceProgress = async (key, time) => {
       updateTestSequenceProgress(key, testSequenceStatus.IN_PROGRESS);
-      await wait(time);
+      await utils.wait(time);
       updateTestSequenceProgress(key, testSequenceStatus.DONE);
     };
 
