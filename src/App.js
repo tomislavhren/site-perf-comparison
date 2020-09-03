@@ -1,23 +1,19 @@
 import React from 'react';
 import './App.css';
-import * as service from './service';
-import PageTiming from './PageTiming';
-import pageTimingData1 from './pageTiming1.json';
-import pageTimingData2 from './pageTiming2.json';
-import * as utils from './utils';
-import PerformanceBanner from './PerformanceBanner';
-import TestSequence from './TestSequence';
-import Timer from './Timer';
-import SetupSuccessful from './SetupSuccessful';
-import { testSequence, testSequenceStatus } from './constants';
+import * as service from './core/service';
+import PageTiming from './components/PageTiming';
+import * as utils from './core/utils';
+import PerformanceBanner from './components/PerformanceBanner';
+import TestSequence from './components/TestSequence';
+import Timer from './components/Timer';
+import SetupSuccessful from './components/SetupSuccessful';
+import { testSequence, testSequenceStatus } from './core/constants';
 
 const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }), {});
 
 const wait = (s) => new Promise(resolve => setTimeout(resolve, s*1000));
 
 function App() {
-  // const [realWebsitePageTimings, setRealWebsitePageTimings] = React.useState(pageTimingData1.output);
-  // const [clonedWebsitePageTimings, setClonedWebsitePageTimings] = React.useState(pageTimingData2.output);
   const timer = React.useRef();
 
   const [originalUrl, setOriginalUrl] = React.useState('');
@@ -26,6 +22,7 @@ function App() {
   const [originalUrlPerformance, setOriginalUrlPerformance] = React.useState(null);
   const [clonedUrlPerformance, setClonedUrlPerformance] = React.useState(null);
   
+  const [testInProgress, setTestInProgress] = React.useState(false);
   const [setupSuccessful, setSetupSuccessful] = React.useState(false);
   const [testAttempt, setTestAttempt] = React.useState({});
   
@@ -52,6 +49,8 @@ function App() {
       console.error(`Something is wrong with the URL: ${originalUrl}`)
       return;
     }
+
+    setTestInProgress(true);
 
     // Reset everything
     setSetupSuccessful(false);
@@ -103,6 +102,8 @@ function App() {
 
       setOriginalUrlPerformance(originalUrlResults.output);
       setClonedUrlPerformance(clonedUrlResults.output);
+
+      setTestInProgress(false);
     }, 10000);
 
   }, [originalUrl, incrementTestAttempt, setSetupSuccessful, setOriginalUrlPerformance, setClonedUrlPerformance]);
@@ -116,6 +117,8 @@ function App() {
       console.error(`Something is wrong with the URL: ${originalUrl}`)
       return;
     }
+
+    setTestInProgress(true);
 
     setOriginalUrlPerformance(null);
     setClonedUrlPerformance(null);
@@ -131,6 +134,8 @@ function App() {
       
       setOriginalUrlPerformance(originalUrlResaults.output);
       setClonedUrlPerformance(clonedUrlResault.output);
+
+      setTestInProgress(false);
     }, 10000);
 
   }, [originalUrl, clonedUrl, incrementTestAttempt, setOriginalUrlPerformance, setClonedUrlPerformance]);
@@ -144,7 +149,7 @@ function App() {
       <form onSubmit={attemptNumber > 0 ? handleRerunTest : handleRunTest} className="form">
         <div className="input-url">
           <input value={originalUrl} onChange={handleInputChange} className="input" placeholder="Enter URL to test" type="url" name="url" />
-          <button type="submit" className="run-test">
+          <button disabled={testInProgress} type="submit" className="run-test">
             <span className="material-icons">timer</span>
             {attemptNumber > 0 ? 'Rerun test' : 'Run test'}
           </button>

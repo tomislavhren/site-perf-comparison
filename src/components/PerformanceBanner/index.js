@@ -1,5 +1,5 @@
 import React from 'react';
-import { toPercentageString } from './utils';
+import { toPercentageString } from '../../core/utils';
 
 const PerformanceBanner = ({ diff }) => {
     return (

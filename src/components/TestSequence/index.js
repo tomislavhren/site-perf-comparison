@@ -1,5 +1,5 @@
 import React from 'react'
-import { testSequenceLabels, testSequenceStatus } from './constants';
+import { testSequenceLabels, testSequenceStatus } from '../../core/constants';
 import './testSequence.css';
 
 const testSequenceEntries = Object.entries(testSequenceLabels);

@@ -23,7 +23,7 @@ const Timer = ({ onMount }) => {
     
     React.useEffect(() => {
         onMount({ startTimer, stopTimer, resetTimer });
-    }, [])
+    }, []);
 
     const diff = new Date(time - startTime.current);
     const [h,m,s] = [

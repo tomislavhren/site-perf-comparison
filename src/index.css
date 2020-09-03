@@ -23,6 +23,8 @@ input:-webkit-autofill:active {
 	-webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
+/* CSS tooltip */
+
 .tooltip {
   position: relative;
 }
@@ -63,6 +65,8 @@ input:-webkit-autofill:active {
 
   top: -7px;
 }
+
+/* Helper classes */
 
 .text-success {
   color: #84B80D !important; 

@@ -2,7 +2,7 @@ import React from 'react';
 import './pageTiming.css';
 import TimingItem from './TimingItem';
 import ServerInfo from './ServerInfo';
-import { calculateDiffPercentage } from './utils';
+import { calculateDiffPercentage } from '../../core/utils';
 
 const PageTiming = ({
     videoSrc,

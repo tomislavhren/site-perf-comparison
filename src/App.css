@@ -60,6 +60,11 @@
   padding: 0 2rem;
 }
 
+.run-test:disabled {
+  background-color: rgba(37, 166, 202, 0.5);
+  cursor: auto;
+}
+
 .run-test .material-icons {
   margin-right: .5rem;
   color: white;
