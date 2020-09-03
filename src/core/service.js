@@ -25,8 +25,8 @@ export const getPerformanceResultsByJobId = async (jobId) => {
     });
     const performanceResults = await response.json();
 
-    if (performanceResults.state.includes('TEST')) {
-        await wait(2000);
+    if (performanceResults.state !== 'SUCCESS' || !performanceResults.output) {
+        await wait(2);
         return await getPerformanceResultsByJobId(jobId);
     } else {
         return performanceResults;
