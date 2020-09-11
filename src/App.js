@@ -9,183 +9,245 @@ import Timer from './components/Timer';
 import SetupSuccessful from './components/SetupSuccessful';
 import { testSequence, testSequenceStatus } from './core/constants';
 
-const defaultTestSequenceProgress = Object.keys(testSequence).reduce((acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }), {});
+const defaultTestSequenceProgress = Object.keys(testSequence).reduce(
+	(acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }),
+	{}
+);
 
 function App() {
-  const timer = React.useRef();
+	const timer = React.useRef();
 
-  const [originalUrl, setOriginalUrl] = React.useState('');
-  const [clonedUrl, setClonedUrl] = React.useState('');
+	const [originalUrl, setOriginalUrl] = React.useState('');
+	const [clonedUrl, setClonedUrl] = React.useState('');
 
-  const [originalUrlPerformance, setOriginalUrlPerformance] = React.useState(null);
-  const [clonedUrlPerformance, setClonedUrlPerformance] = React.useState(null);
-  
-  const [testInProgress, setTestInProgress] = React.useState(false);
-  const [setupSuccessful, setSetupSuccessful] = React.useState(false);
-  const [testAttempt, setTestAttempt] = React.useState({});
-  
-  const [testSequenceProgress, setTestSequenceProgress] = React.useState(defaultTestSequenceProgress);
-  
-  const handleOnTimerMount = React.useCallback((el) => {
-    timer.current = el;
-  }, []);
+	const [originalUrlPerformance, setOriginalUrlPerformance] = React.useState(
+		null
+	);
+	const [clonedUrlPerformance, setClonedUrlPerformance] = React.useState(null);
 
-  const handleInputChange = React.useCallback(e => {
-    setOriginalUrl(e.target.value);
-  }, [setOriginalUrl])
+	const [testInProgress, setTestInProgress] = React.useState(false);
+	const [setupSuccessful, setSetupSuccessful] = React.useState(false);
+	const [testAttempt, setTestAttempt] = React.useState({});
 
-  const incrementTestAttempt = React.useCallback(() => {
-    setTestAttempt(prev => ({...prev, [originalUrl]: prev[originalUrl] ? prev[originalUrl] + 1 : 1 }));
-  }, [originalUrl, setTestAttempt]);
+	const [testSequenceProgress, setTestSequenceProgress] = React.useState(
+		defaultTestSequenceProgress
+	);
 
-  const handleRunTest = React.useCallback(async (e) => {
-    e.preventDefault();
+	const handleOnTimerMount = React.useCallback(el => {
+		timer.current = el;
+	}, []);
 
-    // Check the URL is legit
-    const { origin } = new URL(originalUrl);
-    if(!origin || origin === 'null') {
-      console.error(`Something is wrong with the URL: ${originalUrl}`)
-      return;
-    }
+	const handleInputChange = React.useCallback(
+		e => {
+			setOriginalUrl(e.target.value);
+		},
+		[setOriginalUrl]
+	);
 
-    setTestInProgress(true);
+	const incrementTestAttempt = React.useCallback(() => {
+		setTestAttempt(prev => ({
+			...prev,
+			[originalUrl]: prev[originalUrl] ? prev[originalUrl] + 1 : 1,
+		}));
+	}, [originalUrl, setTestAttempt]);
 
-    // Reset everything
-    setSetupSuccessful(false);
-    setOriginalUrlPerformance(null);
-    setClonedUrlPerformance(null);
-    setTestSequenceProgress({ ...defaultTestSequenceProgress });
+	const handleRunTest = React.useCallback(
+		async e => {
+			e.preventDefault();
 
+			// Check the URL is legit
+			const realWebsiteUrl = utils.validateURL(originalUrl);
 
-    // Helper methods
-    const updateTestSequenceProgress = (key, status) => {
-      setTestSequenceProgress(prevState => ({ ...prevState, [key]: status }));
-    };
+			// Disables the button
+			setTestInProgress(true);
 
-    const waitAndUpdateTestSequenceProgress = async (key, time) => {
-      updateTestSequenceProgress(key, testSequenceStatus.IN_PROGRESS);
-      await utils.wait(time);
-      updateTestSequenceProgress(key, testSequenceStatus.DONE);
-    };
+			// Reset everything
+			setSetupSuccessful(false);
+			setOriginalUrlPerformance(null);
+			setClonedUrlPerformance(null);
+			setTestSequenceProgress({ ...defaultTestSequenceProgress });
 
-    // Attempt is shown below the input after the test is run for the 1st time
-    incrementTestAttempt();
+			// Helper methods
+			const updateTestSequenceProgress = (key, status) => {
+				setTestSequenceProgress(prevState => ({
+					...prevState,
+					[key]: status,
+				}));
+			};
 
-    updateTestSequenceProgress(testSequence.VERIFY_URL, testSequenceStatus.IN_PROGRESS);
-    
-    const clonedWebsiteUrl = await service.cloneWebsite(origin);
-    setClonedUrl(clonedWebsiteUrl);
+			const waitAndUpdateTestSequenceProgress = async (key, time) => {
+				updateTestSequenceProgress(key, testSequenceStatus.IN_PROGRESS);
+				await utils.wait(time);
+				updateTestSequenceProgress(key, testSequenceStatus.DONE);
+			};
 
-    const realWebsiteJobId = await service.createPerformanceTestJob(origin);
-    const clonedWebsiteJobId = await service.createPerformanceTestJob(clonedWebsiteUrl);
-    updateTestSequenceProgress(testSequence.VERIFY_URL, testSequenceStatus.DONE);
+			// Attempt is shown below the input after the test is run for the 1st time
+			incrementTestAttempt();
 
-    // UX only, no logic
-    await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
-    await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, 7);
-    await waitAndUpdateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, 5);
-    await waitAndUpdateTestSequenceProgress(testSequence.INIT_CLONED_SITE, 1);
+			updateTestSequenceProgress(
+				testSequence.VERIFY_URL,
+				testSequenceStatus.IN_PROGRESS
+			);
 
-    updateTestSequenceProgress(testSequence.START_TIMER, testSequenceStatus.IN_PROGRESS);
-    timer.current.startTimer();
+			const clonedWebsiteUrl = await service.cloneWebsite(realWebsiteUrl);
+			setClonedUrl(clonedWebsiteUrl);
 
-    // Try to get tests after 10s so we don't ping server too many times
-    setTimeout(async () => {
-      const originalUrlResults = await service.getPerformanceResultsByJobId(realWebsiteJobId);
-      const clonedUrlResults = await service.getPerformanceResultsByJobId(clonedWebsiteJobId);
+			updateTestSequenceProgress(
+				testSequence.VERIFY_URL,
+				testSequenceStatus.DONE
+			);
 
-      updateTestSequenceProgress(testSequence.START_TIMER, testSequenceStatus.DONE);
-      timer.current.resetTimer();
-      setSetupSuccessful(true);
+			// UX only, no logic
+			await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
+			await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, 7);
+			await waitAndUpdateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, 5);
+			await waitAndUpdateTestSequenceProgress(testSequence.INIT_CLONED_SITE, 1);
 
-      setOriginalUrlPerformance(originalUrlResults.output);
-      setClonedUrlPerformance(clonedUrlResults.output);
+			updateTestSequenceProgress(
+				testSequence.START_TIMER,
+				testSequenceStatus.IN_PROGRESS
+			);
+			timer.current.startTimer();
+			const realWebsitePerformanceResults = await service.fetchPerformanceResults(
+				realWebsiteUrl
+			);
+			setOriginalUrlPerformance(realWebsitePerformanceResults);
 
-      setTestInProgress(false);
-    }, 10000);
+			const clonedWebsitePerformanceResults = await service.fetchPerformanceResults(
+				clonedWebsiteUrl
+			);
+			setClonedUrlPerformance(clonedWebsitePerformanceResults);
+			timer.current.resetTimer();
+			updateTestSequenceProgress(
+				testSequence.START_TIMER,
+				testSequenceStatus.DONE
+			);
 
-  }, [originalUrl, incrementTestAttempt, setSetupSuccessful, setOriginalUrlPerformance, setClonedUrlPerformance]);
+			// Shows "Your site is X% faster" banner
+			setSetupSuccessful(true);
+			// Enables run button
+			setTestInProgress(false);
+		},
+		[
+			originalUrl,
+			incrementTestAttempt,
+			setSetupSuccessful,
+			setOriginalUrlPerformance,
+			setClonedUrlPerformance,
+		]
+	);
 
-  const handleRerunTest = React.useCallback(async (e) => {
-    e.preventDefault();
-   
-    const { origin: originalOrigin } = new URL(originalUrl);
-    const { origin: clonedOrigin } = new URL(clonedUrl);
-    if(!originalOrigin || originalOrigin === 'null') {
-      console.error(`Something is wrong with the URL: ${originalUrl}`)
-      return;
-    }
+	const handleRerunTest = React.useCallback(
+		async e => {
+			e.preventDefault();
 
-    setTestInProgress(true);
+			const originalOrigin = utils.validateURL(originalUrl);
+			const clonedOrigin = utils.validateURL(clonedUrl);
 
-    setOriginalUrlPerformance(null);
-    setClonedUrlPerformance(null);
+			// Disables run button
+			setTestInProgress(true);
 
-    incrementTestAttempt();
+			// Clear previous perf data
+			setOriginalUrlPerformance(null);
+			setClonedUrlPerformance(null);
 
-    const originalUrlJobId = await service.createPerformanceTestJob(originalOrigin);
-    const clonedUrlJobId = await service.createPerformanceTestJob(clonedOrigin);
+			incrementTestAttempt();
 
-    setTimeout(async () => {
-      const originalUrlResaults = await service.getPerformanceResultsByJobId(originalUrlJobId);
-      const clonedUrlResault = await service.getPerformanceResultsByJobId(clonedUrlJobId);
-      
-      setOriginalUrlPerformance(originalUrlResaults.output);
-      setClonedUrlPerformance(clonedUrlResault.output);
+			const realWebsitePerformanceResults = await service.fetchPerformanceResults(
+				originalOrigin
+			);
+			setOriginalUrlPerformance(realWebsitePerformanceResults);
 
-      setTestInProgress(false);
-    }, 10000);
+			const clonedWebsitePerformanceResults = await service.fetchPerformanceResults(
+				clonedOrigin
+			);
+			setClonedUrlPerformance(clonedWebsitePerformanceResults);
 
-  }, [originalUrl, clonedUrl, incrementTestAttempt, setOriginalUrlPerformance, setClonedUrlPerformance]);
+			setTestInProgress(false);
+		},
+		[
+			originalUrl,
+			clonedUrl,
+			incrementTestAttempt,
+			setOriginalUrlPerformance,
+			setClonedUrlPerformance,
+		]
+	);
 
-  const originalUrlTimingProps = utils.getWebsitePerformanceProps(originalUrlPerformance) || {};
-  const clonedUrlTimingProps = utils.getWebsitePerformanceProps(clonedUrlPerformance) || {};
-  const attemptNumber = testAttempt[originalUrl] || 0;
+	const originalUrlTimingProps = originalUrlPerformance || {};
+	const clonedUrlTimingProps = clonedUrlPerformance || {};
+	const attemptNumber = testAttempt[originalUrl] || 0;
+	const runDisabled = testInProgress || !originalUrl;
+	return (
+		<div className="App">
+			<form
+				onSubmit={attemptNumber > 0 ? handleRerunTest : handleRunTest}
+				className="form"
+			>
+				<div className="input-url">
+					<input
+						value={originalUrl}
+						onChange={handleInputChange}
+						className="input"
+						placeholder="Enter URL to test"
+						type="url"
+						name="url"
+					/>
+					<button disabled={runDisabled} type="submit" className="run-test">
+						<span className="material-icons">timer</span>
+						{testInProgress
+							? 'Running test'
+							: attemptNumber > 0
+							? 'Rerun test'
+							: 'Run test'}
+					</button>
+				</div>
+				{!setupSuccessful ? (
+					<>
+						<TestSequence testSequenceProgress={testSequenceProgress} />
+						<Timer onMount={handleOnTimerMount} />
+					</>
+				) : (
+					<SetupSuccessful attemptNumber={attemptNumber} />
+				)}
+			</form>
 
-  return (
-    <div className="App">
-      <form onSubmit={attemptNumber > 0 ? handleRerunTest : handleRunTest} className="form">
-        <div className="input-url">
-          <input value={originalUrl} onChange={handleInputChange} className="input" placeholder="Enter URL to test" type="url" name="url" />
-          <button disabled={testInProgress} type="submit" className="run-test">
-            <span className="material-icons">timer</span>
-            {attemptNumber > 0 ? 'Rerun test' : 'Run test'}
-          </button>
-        </div>
-        {!setupSuccessful ?
-          <>
-            <TestSequence testSequenceProgress={testSequenceProgress} />
-            <Timer onMount={handleOnTimerMount} />
-          </> :
-          <SetupSuccessful attemptNumber={attemptNumber} />
-        }
-      </form>
-      
-      {!utils.isEmpty(originalUrlTimingProps) && !utils.isEmpty(clonedUrlTimingProps) && 
-        <PerformanceBanner diff={utils.calculateDiffPercentage(clonedUrlTimingProps.pageLoadTime, originalUrlTimingProps.pageLoadTime)} />
-      }
-      <div className="page-timings-container">
-        <PageTiming
-          serverName="Rocket"
-          serverLocation="Atlanta, Georgia, USA"
-          ttfb={clonedUrlTimingProps.ttfb}
-          firstPaint={clonedUrlTimingProps.firstPaint}
-          pageLoadTime={clonedUrlTimingProps.pageLoadTime}
-          ttfb2={originalUrlTimingProps.ttfb}
-          firstPaint2={originalUrlTimingProps.firstPaint}
-          pageLoadTime2={originalUrlTimingProps.pageLoadTime}
-        />
-        <PageTiming 
-          serverName="TBD"
-          serverLocation="TBD"
-          ttfb={originalUrlTimingProps.ttfb}
-          firstPaint={originalUrlTimingProps.firstPaint}
-          pageLoadTime={originalUrlTimingProps.pageLoadTime}
-        />
-      </div>
-      
-    </div>
-  );
+			{!utils.isEmpty(originalUrlTimingProps) &&
+				!utils.isEmpty(clonedUrlTimingProps) && (
+					<PerformanceBanner
+						diff={utils.calculateDiffPercentage(
+							clonedUrlTimingProps.pageLoadTime,
+							originalUrlTimingProps.pageLoadTime
+						)}
+					/>
+				)}
+			<div className="page-timings-container">
+				<PageTiming
+					serverName="Rocket"
+					serverLocation="Atlanta, Georgia, USA"
+					ttfb={clonedUrlTimingProps.ttfb}
+					firstPaintTime={clonedUrlTimingProps.firstPaintTime}
+					pageLoadTime={clonedUrlTimingProps.pageLoadTime}
+					ySlowScore={clonedUrlTimingProps.ySlowScore}
+					pageSpeedScore={clonedUrlTimingProps.pageSpeedScore}
+					ttfb2={originalUrlTimingProps.ttfb}
+					firstPaintTime2={originalUrlTimingProps.firstPaintTime}
+					pageLoadTime2={originalUrlTimingProps.pageLoadTime}
+					ySlowScore2={originalUrlTimingProps.ySlowScore}
+					pageSpeedScore2={originalUrlTimingProps.pageSpeedScore}
+				/>
+				<PageTiming
+					serverName="TBD"
+					serverLocation="TBD"
+					ttfb={originalUrlTimingProps.ttfb}
+					firstPaintTime={originalUrlTimingProps.firstPaintTime}
+					pageLoadTime={originalUrlTimingProps.pageLoadTime}
+					ySlowScore={originalUrlTimingProps.ySlowScore}
+					pageSpeedScore={originalUrlTimingProps.pageSpeedScore}
+				/>
+			</div>
+		</div>
+	);
 }
 
 export default App;
