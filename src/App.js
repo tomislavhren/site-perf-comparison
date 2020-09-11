@@ -235,6 +235,7 @@ function App() {
 					pageLoadTime2={originalUrlTimingProps.pageLoadTime}
 					ySlowScore2={originalUrlTimingProps.ySlowScore}
 					pageSpeedScore2={originalUrlTimingProps.pageSpeedScore}
+					highlighted
 				/>
 				<PageTiming
 					serverName="TBD"

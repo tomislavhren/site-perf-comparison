@@ -7,6 +7,7 @@ const TimingItem = ({
 	tooltipLabel,
 	tooltipText,
 	percentageDiff,
+	highlighted,
 }) => {
 	const renderDiff = React.useCallback(() => {
 		if (!percentageDiff) {
@@ -27,7 +28,13 @@ const TimingItem = ({
 
 	return (
 		<div className="timing-item">
-			<div className="timing-item__result">{result ? `${result} ms` : '-'}</div>
+			<div
+				className={`timing-item__result ${
+					highlighted ? 'timing-item__result--highlighted' : ''
+				}`}
+			>
+				{result || '-'}
+			</div>
 			<div className="timing-item__label">
 				<span>{label}</span>
 				{tooltipText && (
