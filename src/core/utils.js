@@ -5,6 +5,7 @@ export const extractPerformanceProps = performanceData => {
 		html_load_time: ttfb,
 		yslow_score: ySlowScore,
 		pagespeed_score: pageSpeedScore,
+		report_url: reportUrl,
 	} = performanceData || {};
 
 	const props = {
@@ -13,6 +14,7 @@ export const extractPerformanceProps = performanceData => {
 		ttfb,
 		ySlowScore,
 		pageSpeedScore,
+		reportUrl,
 	};
 
 	return props;

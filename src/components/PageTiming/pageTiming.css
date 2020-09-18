@@ -123,3 +123,33 @@
 	font-weight: 300;
 	padding: 1rem 0;
 }
+
+.report-thumbnail {
+	background-color: #efe5e5;
+	width: auto;
+	min-height: 300px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.report-thumbnail {
+	width: 100%;
+	object-fit: contain;
+}
+
+.page-timings .timing-results:not(:last-child) {
+	border-top: 1px solid #ececec;
+}
+
+.check-score {
+	border-top: 1px solid #ececec;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.125rem;
+	font-weight: bold;
+	color: #25a6ca;
+	padding: 1rem 0;
+	text-decoration: none;
+}

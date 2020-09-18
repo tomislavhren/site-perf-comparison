@@ -5,7 +5,6 @@ import ServerInfo from './ServerInfo';
 import { calculateDiffPercentage } from '../../core/utils';
 
 const PageTiming = ({
-	videoSrc,
 	ttfb,
 	ttfb2,
 	firstPaintTime,
@@ -19,6 +18,7 @@ const PageTiming = ({
 	serverName,
 	serverLocation,
 	highlighted,
+	reportUrl,
 }) => {
 	return (
 		<div className="page-timings">
@@ -52,13 +52,15 @@ const PageTiming = ({
 				/>
 			</div>
 
-			<video
-				style={{ background: '#EFE5E5' }}
-				autoPlay
-				width="100%"
-				height="auto"
-				src={`//${videoSrc}`}
-			></video>
+			<div className="report-thumbnail">
+				{reportUrl && (
+					<img
+						className="report-thumbnail__img"
+						alt="Report thumbnail"
+						src={`${reportUrl}/screenshot.jpg`}
+					/>
+				)}
+			</div>
 
 			<div className="timing-results">
 				<TimingItem
@@ -81,6 +83,13 @@ const PageTiming = ({
 					highlighted={highlighted}
 				/>
 			</div>
+
+			{reportUrl && (
+				<a href={reportUrl} className="check-score" rel="noopener noreferrer">
+					Check rocket score on GTMetrix{' '}
+					<span className="material-icons">launch</span>
+				</a>
+			)}
 		</div>
 	);
 };

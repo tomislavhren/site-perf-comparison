@@ -48,7 +48,7 @@ export const fetchPerformanceResults = async url => {
 	//	page_load_time: Math.floor(Math.random() * 3000),
 	//	pagespeed_score: Math.floor(Math.random() * 101),
 	//	redirect_duration: 178,
-	//	report_url: 'https://gtmetrix.com/reports/178.128.158.164/ysT63QY3',
+	//	report_url: 'https://gtmetrix.com/reports/www.horseandradish.com/fXDMQeLl',
 	//	rum_speed_index: 828,
 	//	yslow_score: Math.floor(Math.random() * 101),
 	//};

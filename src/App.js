@@ -8,16 +8,29 @@ import TestSequence from './components/TestSequence';
 import Timer from './components/Timer';
 import SetupSuccessful from './components/SetupSuccessful';
 import { testSequence, testSequenceStatus } from './core/constants';
+import * as qs from 'query-string';
 
 const defaultTestSequenceProgress = Object.keys(testSequence).reduce(
 	(acc, key) => Object.assign(acc, { [key]: testSequenceStatus.PENDING }),
 	{}
 );
 
+const getInitialUrl = () => {
+	const { url: initialUrl = '' } = qs.parse(window.location.search);
+	const trimmedUrl = initialUrl.trim();
+	if (!trimmedUrl) {
+		return '';
+	}
+
+	return /^https?:\/\/.+/.test(trimmedUrl)
+		? trimmedUrl
+		: `https://${trimmedUrl}`;
+};
+
 function App() {
 	const timer = React.useRef();
 
-	const [originalUrl, setOriginalUrl] = React.useState('');
+	const [originalUrl, setOriginalUrl] = React.useState(getInitialUrl());
 	const [clonedUrl, setClonedUrl] = React.useState('');
 
 	const [originalUrlPerformance, setOriginalUrlPerformance] = React.useState(
@@ -107,17 +120,19 @@ function App() {
 				testSequence.START_TIMER,
 				testSequenceStatus.IN_PROGRESS
 			);
-			timer.current.startTimer();
-			const realWebsitePerformanceResults = await service.fetchPerformanceResults(
-				realWebsiteUrl
-			);
-			setOriginalUrlPerformance(realWebsitePerformanceResults);
 
-			const clonedWebsitePerformanceResults = await service.fetchPerformanceResults(
-				clonedWebsiteUrl
-			);
+			timer.current.startTimer();
+			const [
+				realWebsitePerformanceResults,
+				clonedWebsitePerformanceResults,
+			] = await Promise.all([
+				service.fetchPerformanceResults(realWebsiteUrl),
+				service.fetchPerformanceResults(clonedWebsiteUrl),
+			]);
+			setOriginalUrlPerformance(realWebsitePerformanceResults);
 			setClonedUrlPerformance(clonedWebsitePerformanceResults);
 			timer.current.resetTimer();
+
 			updateTestSequenceProgress(
 				testSequence.START_TIMER,
 				testSequenceStatus.DONE
@@ -153,14 +168,14 @@ function App() {
 
 			incrementTestAttempt();
 
-			const realWebsitePerformanceResults = await service.fetchPerformanceResults(
-				originalOrigin
-			);
+			const [
+				realWebsitePerformanceResults,
+				clonedWebsitePerformanceResults,
+			] = await Promise.all([
+				service.fetchPerformanceResults(originalOrigin),
+				service.fetchPerformanceResults(clonedOrigin),
+			]);
 			setOriginalUrlPerformance(realWebsitePerformanceResults);
-
-			const clonedWebsitePerformanceResults = await service.fetchPerformanceResults(
-				clonedOrigin
-			);
 			setClonedUrlPerformance(clonedWebsitePerformanceResults);
 
 			setTestInProgress(false);
@@ -230,6 +245,7 @@ function App() {
 					pageLoadTime={clonedUrlTimingProps.pageLoadTime}
 					ySlowScore={clonedUrlTimingProps.ySlowScore}
 					pageSpeedScore={clonedUrlTimingProps.pageSpeedScore}
+					reportUrl={clonedUrlTimingProps.reportUrl}
 					ttfb2={originalUrlTimingProps.ttfb}
 					firstPaintTime2={originalUrlTimingProps.firstPaintTime}
 					pageLoadTime2={originalUrlTimingProps.pageLoadTime}
@@ -245,6 +261,7 @@ function App() {
 					pageLoadTime={originalUrlTimingProps.pageLoadTime}
 					ySlowScore={originalUrlTimingProps.ySlowScore}
 					pageSpeedScore={originalUrlTimingProps.pageSpeedScore}
+					reportUrl={originalUrlTimingProps.reportUrl}
 				/>
 			</div>
 		</div>
