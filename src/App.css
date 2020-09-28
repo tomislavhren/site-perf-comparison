@@ -1,77 +1,13 @@
 .App {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  justify-content: center;
-  align-content: center;
-  padding: 3rem;
-}
-
-.form {
-  max-width: 1024px;
-  width: 100%;
-  margin: 0 2rem;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-}
-
-.input-url {
-  background-color: white;
-  border-radius: 3rem;
-  height: 4rem;
-  width: 100%;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  box-shadow: 0px 2px 11px -5px #b9b9b9;
-  margin-bottom: 2rem;
-}
-
-.input-url > .input {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  margin: 0;
-  font-size: 1.125rem;
-  flex: 1;
-  padding: 0 2rem;
-  border-radius: 3rem;
-}
-
-.input-url > .input::placeholder {
-  color: #a3a3a3;
-}
-
-.input-url > .run-test {
-  margin: .5rem;
-  outline: none;
-  border: 0;
-  background-color: #25A6CA;
-  border-radius: 100px;
-  text-transform: uppercase;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 0 2rem;
-}
-
-.run-test:disabled {
-  background-color: rgba(37, 166, 202, 0.5);
-  cursor: auto;
-}
-
-.run-test .material-icons {
-  margin-right: .5rem;
-  color: white;
-  font-size: inherit;
+	display: flex;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: center;
+	align-content: center;
+	padding: 3rem;
 }
 
 .page-timings-container {
-  display: flex;
-  width: 100%;
+	display: flex;
+	width: 100%;
 }

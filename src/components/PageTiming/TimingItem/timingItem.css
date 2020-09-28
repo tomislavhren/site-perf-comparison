@@ -1,0 +1,55 @@
+.timing-item {
+	display: flex;
+	align-items: center;
+	flex-flow: column nowrap;
+	padding: 1.5rem 1rem;
+}
+
+.timing-item__result {
+	font-size: 2rem;
+	font-weight: bold;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.timing-item__result.timing-item__result--highlighted {
+	color: #25a6ca;
+}
+
+.timing-item__label {
+	font-family: 'Montserrat', sans-serif;
+	font-size: 1rem;
+	font-weight: 400;
+	padding: 0.5rem 0;
+	display: flex;
+	align-items: center;
+}
+
+.timing-item__diff {
+	padding: 0rem 0.75rem;
+	font-family: 'Montserrat', sans-serif;
+	color: white;
+	text-transform: uppercase;
+	border-radius: 1.5rem;
+	font-size: 0.75rem;
+	font-weight: 600;
+	line-height: 1.5rem;
+}
+
+.timing-item__diff.timing-item__diff--positive {
+	background-color: #75bb00;
+}
+
+.timing-item__diff.timing-item__diff--negative {
+	background-color: #b80d0a;
+}
+
+.timing-item__helper-icon {
+	margin-left: 0.25rem;
+	color: #25a6ca;
+}
+
+@media only screen and (min-width: 80em) {
+	.timing-item {
+		flex: 0 0 33.33%;
+	}
+}

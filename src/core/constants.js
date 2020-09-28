@@ -1,11 +1,10 @@
-
 export const testSequence = {
 	VERIFY_URL: 'VERIFY_URL',
 	DOWNLOAD_HTML: 'DOWNLOAD_HTML',
 	DOWNLOAD_ASSETS: 'DOWNLOAD_ASSETS',
 	OPTIMIZE_ASSETS: 'OPTIMIZE_ASSETS',
 	INIT_CLONED_SITE: 'INIT_CLONED_SITE',
-	START_TIMER: 'START_TIMER',
+	PERFORMING_TEST: 'PERFORMING_TEST',
 };
 
 export const testSequenceLabels = {
@@ -14,10 +13,10 @@ export const testSequenceLabels = {
 	[testSequence.DOWNLOAD_ASSETS]: 'Download CSS, JavScript, Images...',
 	[testSequence.OPTIMIZE_ASSETS]: 'Optimize Images & Fonts',
 	[testSequence.INIT_CLONED_SITE]: 'Initialize Cloned Site on Rocket',
-	[testSequence.START_TIMER]: 'Start Timer',
+	[testSequence.PERFORMING_TEST]: 'Performing Test',
 };
 
-export const testSequenceStatus = {
+export const TestProgressStatus = {
 	PENDING: 'PENDING',
 	IN_PROGRESS: 'IN_PROGRESS',
 	DONE: 'DONE',

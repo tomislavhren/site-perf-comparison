@@ -1,19 +1,28 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
-  width: 100%;
-  background-color: #E8F6F9;
-  font-size: 16px;
+	margin: 0;
+	font-family: 'PT Serif', 'Arial', -apple-system, BlinkMacSystemFont,
+		'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+		'Droid Sans', 'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	min-height: 100vh;
+	width: 100%;
+	font-size: 16px;
+	color: #434b51;
+	min-height: 100vh;
+	min-width: 20em;
+	font-weight: 400;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+		monospace;
 }
 
 input:-webkit-autofill,
@@ -23,59 +32,95 @@ input:-webkit-autofill:active {
 	-webkit-box-shadow: 0 0 0px 1000px white inset;
 }
 
+button {
+	outline: none;
+	border: 0;
+}
+
 /* CSS tooltip */
 
 .tooltip {
-  position: relative;
+	position: relative;
 }
 
 .tooltip .tooltip__text {
-  opacity: 0;
-  width: 300px;
-  background-color: white;
-  box-shadow: 0px 0px 25px 1px #cacaca;
-  top: calc(100% + .5rem);
-  left: -1rem;
-  padding: 1rem;
-  border-radius: 4px;
-  position: absolute;
-  z-index: -1;
-  transition: opacity .1s linear;
-  color: black;
-  font-size: .875rem;
-  line-height: 1.75;
+	font-family: 'Montserrat', sans-serif;
+	display: none;
+	z-index: 100;
+	border-radius: 0.25rem;
+	font-weight: 400;
+	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05),
+		0 0.125rem 1.25rem rgba(13, 55, 70, 0.1);
+	color: #434b51;
+	left: -1rem;
+	padding: 1rem;
+	position: absolute;
+	font-size: 0.875rem;
+	line-height: 1.75;
+	top: calc(100% + 0.5rem);
+	max-width: 18.75rem;
+	background-color: #fff;
 }
 
 .tooltip:hover .tooltip__text {
-  opacity: 1;
-  z-index: 1;
+	display: block;
+	width: 18.75rem;
+}
+
+/*.tooltip .tooltip__text {
+	font-family: 'Montserrat', sans-serif;
+	opacity: 0;
+	width: 300px;
+	background-color: white;
+	font-weight: 400;
+	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05),
+		0 0.125rem 1.25rem rgba(13, 55, 70, 0.1);
+	top: calc(100% + 0.5rem);
+	left: -1rem;
+	padding: 1rem;
+	border-radius: 4px;
+	position: absolute;
+	z-index: -1;
+	transition: opacity 0.1s linear;
+	color: black;
+	font-size: 0.875rem;
+	line-height: 1.75;
+}
+
+.tooltip:hover .tooltip__text {
+	opacity: 1;
+	z-index: 1;
+}*/
+
+.tooltip .tooltip__text * {
+	font-weight: inherit;
 }
 
 .tooltip .tooltip__text:before {
-  content: '';
-  display: block;
-  width: 0;
-  height: 0;
-  position: absolute;
+	content: '';
+	display: block;
+	width: 0;
+	height: 0;
+	position: absolute;
 
-  border-bottom: 8px solid white;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  left: 1rem;
+	border-bottom: 8px solid white;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	left: 1rem;
 
-  top: -7px;
+	top: -7px;
 }
 
 /* Helper classes */
 
 .text-success {
-  color: #84B80D !important; 
+	color: #84b80d !important;
 }
 
 .text-danger {
-  color: rgb(155, 10, 10) !important;
+	color: rgb(155, 10, 10) !important;
 }
 
 .text-default {
-  color: black !important;
+	color: black !important;
 }

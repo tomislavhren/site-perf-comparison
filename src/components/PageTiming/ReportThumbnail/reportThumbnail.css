@@ -1,0 +1,13 @@
+.report-thumbnail {
+	margin-bottom: 1.5rem;
+}
+
+.report-thumbnail__img {
+	width: 100%;
+	object-fit: contain;
+	border: 0.0625rem solid rgba(0, 0, 0, 0.1);
+	display: block;
+	height: auto;
+	margin: 0 auto;
+	max-width: 100%;
+}

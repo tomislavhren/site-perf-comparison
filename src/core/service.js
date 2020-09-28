@@ -4,13 +4,8 @@ const headers = {
 	'Content-Type': 'application/json',
 };
 
-const sitePerformanceApiPrefix =
-	process.env.NODE_ENV === 'development' ? '' : 'http://64.227.57.174';
-const clonerApiPrefix =
-	process.env.NODE_ENV === 'development' ? '' : 'http://178.128.158.164';
-
 export const cloneWebsite = async url => {
-	const response = await fetch(`${clonerApiPrefix}/api/full`, {
+	const response = await fetch(`http://178.128.158.164/api/full`, {
 		method: 'POST',
 		headers,
 		body: JSON.stringify({ url }),
@@ -21,7 +16,7 @@ export const cloneWebsite = async url => {
 };
 
 export const fetchPerformanceResults = async url => {
-	const response = await fetch(`${sitePerformanceApiPrefix}/api/gtmetrix`, {
+	const response = await fetch(`http://64.227.57.174/api/gtmetrix`, {
 		method: 'POST',
 		headers,
 		body: JSON.stringify({ url }),
@@ -52,6 +47,6 @@ export const fetchPerformanceResults = async url => {
 	//	rum_speed_index: 828,
 	//	yslow_score: Math.floor(Math.random() * 101),
 	//};
-	//await utils.wait(3);
-	//return utils.extractPerformanceProps(mock);
+	//await utils.wait(1);
+	//return mock;
 };

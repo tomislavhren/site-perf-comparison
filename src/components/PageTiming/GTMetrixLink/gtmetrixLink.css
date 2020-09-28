@@ -1,0 +1,14 @@
+.gtmetrix-link {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #25a6ca;
+	text-decoration: none;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.gtmetrix-link [data-icon] {
+	margin-left: 0.5rem;
+}

@@ -1,5 +1,9 @@
 import React from 'react';
-import { toPercentageString } from '../../core/utils';
+import { toPercentageString } from '../../../core/utils';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import Tooltip from '../../Tooltip';
+import './timingItem.css';
 
 const TimingItem = ({
 	result,
@@ -13,15 +17,14 @@ const TimingItem = ({
 		if (!percentageDiff) {
 			return <div className="timing-item__diff">-</div>;
 		}
-
+		const isFaster = percentageDiff <= 0;
 		return (
 			<div
 				className={`timing-item__diff timing-item__diff--${
-					percentageDiff > 0 ? 'positive' : 'negative'
+					isFaster ? 'positive' : 'negative'
 				}`}
 			>
-				{toPercentageString(percentageDiff)}{' '}
-				{percentageDiff > 0 ? 'faster' : 'slower'}
+				{toPercentageString(percentageDiff)} {isFaster ? 'faster' : 'slower'}
 			</div>
 		);
 	}, [percentageDiff]);
@@ -36,19 +39,14 @@ const TimingItem = ({
 				{result || '-'}
 			</div>
 			<div className="timing-item__label">
-				<span>{label}</span>
+				{label}
 				{tooltipText && (
-					<div className="icon tooltip">
-						<span className="material-icons">help_outline</span>
-						<span className="tooltip__text">
-							{tooltipLabel && (
-								<label>
-									<strong>{tooltipLabel}</strong>
-								</label>
-							)}
-							<div>{tooltipText}</div>
-						</span>
-					</div>
+					<Tooltip text={tooltipText} label={tooltipLabel}>
+						<FontAwesomeIcon
+							className="timing-item__helper-icon"
+							icon={faQuestionCircle}
+						/>
+					</Tooltip>
 				)}
 			</div>
 			{renderDiff()}

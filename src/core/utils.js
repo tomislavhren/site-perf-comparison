@@ -1,4 +1,36 @@
-export const extractPerformanceProps = performanceData => {
+//export const extractPerformanceProps = performanceData => {
+//	const {
+//		page_load_time: pageLoadTime,
+//		first_paint_time: firstPaintTime,
+//		html_load_time: ttfb,
+//		yslow_score: ySlowScore,
+//		pagespeed_score: pageSpeedScore,
+//		report_url: reportUrl,
+//	} = performanceData || {};
+
+//	const props = {
+//		pageLoadTime,
+//		firstPaintTime,
+//		ttfb,
+//		ySlowScore,
+//		pageSpeedScore,
+//		reportUrl,
+//	};
+
+//	return props;
+//};
+
+export const extractPerformanceProps = (
+	originalSitePerformanceResults,
+	clonedSitePerformanceResults
+) => {
+	if (!originalSitePerformanceResults && !clonedSitePerformanceResults) {
+		return {
+			cloned: null,
+			original: null,
+		};
+	}
+
 	const {
 		page_load_time: pageLoadTime,
 		first_paint_time: firstPaintTime,
@@ -6,18 +38,51 @@ export const extractPerformanceProps = performanceData => {
 		yslow_score: ySlowScore,
 		pagespeed_score: pageSpeedScore,
 		report_url: reportUrl,
-	} = performanceData || {};
+	} = originalSitePerformanceResults;
 
-	const props = {
-		pageLoadTime,
-		firstPaintTime,
-		ttfb,
-		ySlowScore,
-		pageSpeedScore,
-		reportUrl,
+	const {
+		page_load_time: pageLoadTime2,
+		first_paint_time: firstPaintTime2,
+		html_load_time: ttfb2,
+		yslow_score: ySlowScore2,
+		pagespeed_score: pageSpeedScore2,
+		report_url: reportUrl2,
+	} = clonedSitePerformanceResults;
+
+	const cloned = {
+		pageLoadTime: {
+			data: pageLoadTime2,
+			diff: calculateDiffPercentage(pageLoadTime2, pageLoadTime),
+		},
+		firstPaintTime: {
+			data: firstPaintTime2,
+			diff: calculateDiffPercentage(firstPaintTime2, firstPaintTime),
+		},
+		ttfb: { data: ttfb2, diff: calculateDiffPercentage(ttfb2, ttfb) },
+		ySlowScore: {
+			data: ySlowScore2,
+			diff: -calculateDiffPercentage(ySlowScore2, ySlowScore), // -1 = hack because higher score means better results
+		},
+		pageSpeedScore: {
+			data: pageSpeedScore2,
+			diff: -calculateDiffPercentage(pageSpeedScore2, pageSpeedScore), // -1 = hack because higher score means better results
+		},
+		reportUrl: reportUrl2,
 	};
 
-	return props;
+	const original = {
+		pageLoadTime: { data: pageLoadTime },
+		firstPaintTime: { data: firstPaintTime },
+		ttfb: { data: ttfb },
+		ySlowScore: { data: ySlowScore },
+		pageSpeedScore: { data: pageSpeedScore },
+		reportUrl: reportUrl,
+	};
+
+	return {
+		cloned,
+		original,
+	};
 };
 
 export const validateURL = url => {
@@ -29,7 +94,7 @@ export const validateURL = url => {
 	return origin;
 };
 
-export const calculateDiffPercentage = (oldValue, newValue) => {
+export const calculateDiffPercentage = (newValue, oldValue) => {
 	if (!newValue) {
 		return null;
 	}
