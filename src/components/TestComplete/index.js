@@ -1,5 +1,5 @@
 import React from 'react';
-import './setupSuccessful.css';
+import './testComplete.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../Tooltip';
@@ -19,22 +19,19 @@ const getAttemptString = num => {
 	}
 };
 
-const SetupSuccessful = ({ attemptNumber }) => {
+const TestComplete = ({ attemptNumber }) => {
 	const attempt = getAttemptString(attemptNumber);
 
 	return (
-		<div className="setup-successful">
-			Setup Successful{' '}
-			<FontAwesomeIcon
-				className="setup-successful__check-icon"
-				icon={faCheck}
-			/>
+		<div className="test-complete">
+			Test Complete{' '}
+			<FontAwesomeIcon className="test-complete__check-icon" icon={faCheck} />
 			<div className="divider" />
-			<span className="setup-successful__attempt">
+			<span className="test-complete__attempt">
 				{attempt} load{' '}
 				<Tooltip text="Placeholder text" label={`${attempt} load`}>
 					<FontAwesomeIcon
-						className="setup-successful__helper-icon"
+						className="test-complete__helper-icon"
 						icon={faQuestionCircle}
 					/>
 				</Tooltip>
@@ -43,4 +40,4 @@ const SetupSuccessful = ({ attemptNumber }) => {
 	);
 };
 
-export default SetupSuccessful;
+export default TestComplete;

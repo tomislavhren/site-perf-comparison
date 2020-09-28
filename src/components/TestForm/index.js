@@ -1,17 +1,17 @@
 import React from 'react';
 import * as service from '../../core/service';
 import * as utils from '../../core/utils';
-import { testSequence, TestProgressStatus } from '../../core/constants';
+import {
+	testSequence,
+	TestProgressStatus,
+	initialTestProgress,
+	rerunTestProgress,
+} from '../../core/constants';
 import TestProgressList from './TestProgressList';
-import SetupSuccessful from '../SetupSuccessful';
+import TestComplete from '../TestComplete';
 import * as qs from 'query-string';
 import Form from './Form';
 import './testForm.css';
-
-const defaultTestSequenceProgress = Object.keys(testSequence).reduce(
-	(acc, key) => Object.assign(acc, { [key]: TestProgressStatus.PENDING }),
-	{}
-);
 
 const getInitialUrl = () => {
 	const { url: initialUrl = '' } = qs.parse(window.location.search);
@@ -30,12 +30,12 @@ const TestForm = ({ onStart, onSuccess }) => {
 	const [clonedUrl, setClonedUrl] = React.useState('');
 
 	const [isTestInProgress, setIsTestInProgress] = React.useState(false);
-	const [setupSuccessful, setSetupSuccessful] = React.useState(false);
+	const [isTestComplete, setIsTestComplete] = React.useState(false);
 	const [testAttempt, setTestAttempt] = React.useState({});
 
-	const [testSequenceProgress, setTestSequenceProgress] = React.useState(
-		defaultTestSequenceProgress
-	);
+	const [testSequenceProgress, setTestSequenceProgress] = React.useState({
+		...initialTestProgress,
+	});
 
 	const incrementTestAttempt = React.useCallback(
 		url => {
@@ -57,8 +57,8 @@ const TestForm = ({ onStart, onSuccess }) => {
 			setIsTestInProgress(true);
 
 			// Reset everything
-			setSetupSuccessful(false);
-			setTestSequenceProgress({ ...defaultTestSequenceProgress });
+			setIsTestComplete(false);
+			setTestSequenceProgress({ ...initialTestProgress });
 
 			// Helper methods
 			const updateTestSequenceProgress = (key, status) => {
@@ -112,18 +112,21 @@ const TestForm = ({ onStart, onSuccess }) => {
 			);
 
 			// Shows "Your site is X% faster" banner
-			setSetupSuccessful(true);
+			setIsTestComplete(true);
 			// Enables run button
 			setIsTestInProgress(false);
 
 			onSuccess(realWebsitePerformanceResults, clonedWebsitePerformanceResults);
 		},
-		[incrementTestAttempt, setSetupSuccessful, onSuccess, onStart]
+		[incrementTestAttempt, setIsTestComplete, onSuccess, onStart]
 	);
 
 	const handleRerunTest = React.useCallback(
 		async url => {
 			onStart();
+
+			setIsTestComplete(false);
+			setTestSequenceProgress({ ...rerunTestProgress });
 
 			const originalOrigin = utils.validateURL(originalUrl);
 			const clonedOrigin = utils.validateURL(clonedUrl);
@@ -131,7 +134,7 @@ const TestForm = ({ onStart, onSuccess }) => {
 			// Disables run button
 			setIsTestInProgress(true);
 
-			incrementTestAttempt();
+			incrementTestAttempt(url);
 
 			const [
 				realWebsitePerformanceResults,
@@ -140,6 +143,10 @@ const TestForm = ({ onStart, onSuccess }) => {
 				service.fetchPerformanceResults(originalOrigin),
 				service.fetchPerformanceResults(clonedOrigin),
 			]);
+
+			// Shows "Your site is X% faster" banner
+			setIsTestComplete(true);
+			// Enables run button
 			setIsTestInProgress(false);
 
 			onSuccess(realWebsitePerformanceResults, clonedWebsitePerformanceResults);
@@ -159,10 +166,10 @@ const TestForm = ({ onStart, onSuccess }) => {
 					onSubmit={onSubmit}
 				/>
 			</div>
-			{!setupSuccessful ? (
+			{!isTestComplete ? (
 				<TestProgressList testSequenceProgress={testSequenceProgress} />
 			) : (
-				<SetupSuccessful attemptNumber={attemptNumber} />
+				<TestComplete attemptNumber={attemptNumber} />
 			)}
 		</div>
 	);

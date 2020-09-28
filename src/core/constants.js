@@ -21,3 +21,21 @@ export const TestProgressStatus = {
 	IN_PROGRESS: 'IN_PROGRESS',
 	DONE: 'DONE',
 };
+
+export const initialTestProgress = {
+	[testSequence.VERIFY_URL]: TestProgressStatus.PENDING,
+	[testSequence.DOWNLOAD_HTML]: TestProgressStatus.PENDING,
+	[testSequence.DOWNLOAD_ASSETS]: TestProgressStatus.PENDING,
+	[testSequence.OPTIMIZE_ASSETS]: TestProgressStatus.PENDING,
+	[testSequence.INIT_CLONED_SITE]: TestProgressStatus.PENDING,
+	[testSequence.PERFORMING_TEST]: TestProgressStatus.PENDING,
+};
+
+export const rerunTestProgress = {
+	[testSequence.VERIFY_URL]: TestProgressStatus.DONE,
+	[testSequence.DOWNLOAD_HTML]: TestProgressStatus.DONE,
+	[testSequence.DOWNLOAD_ASSETS]: TestProgressStatus.DONE,
+	[testSequence.OPTIMIZE_ASSETS]: TestProgressStatus.DONE,
+	[testSequence.INIT_CLONED_SITE]: TestProgressStatus.DONE,
+	[testSequence.PERFORMING_TEST]: TestProgressStatus.IN_PROGRESS,
+};

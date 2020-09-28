@@ -22,7 +22,7 @@ export const fetchPerformanceResults = async url => {
 		body: JSON.stringify({ url }),
 	});
 	const performanceResults = await response.json();
-	return utils.extractPerformanceProps(performanceResults);
+	return performanceResults;
 
 	// FOR TESTING PURPOSES
 	//const mock = {

@@ -1,4 +1,4 @@
-.setup-successful {
+.test-complete {
 	font-size: 1.125rem;
 	display: flex;
 	align-items: center;
@@ -9,26 +9,26 @@
 	font-family: 'Montserrat', sans-serif;
 }
 
-.setup-successful [data-icon] {
+.test-complete [data-icon] {
 	margin-left: 0.5rem;
 }
 
-.setup-successful .divider {
+.test-complete .divider {
 	height: 1rem;
 	width: 0.0625rem;
 	background-color: rgba(0, 0, 0, 0.2);
 	margin: 0 1rem;
 }
 
-.setup-successful__attempt {
+.test-complete__attempt {
 	display: flex;
 	align-items: center;
 }
 
-.setup-successful__helper-icon {
+.test-complete__helper-icon {
 	color: #25a6ca;
 }
 
-.setup-successful__check-icon {
+.test-complete__check-icon {
 	color: #75bb00;
 }
