@@ -1,27 +1,17 @@
-import * as utils from './utils';
-
-const headers = {
-	'Content-Type': 'application/json',
-};
+import api from './api';
 
 export const cloneWebsite = async url => {
-	const response = await fetch(`http://178.128.158.164/api/full`, {
-		method: 'POST',
-		headers,
-		body: JSON.stringify({ url }),
+	const { new_url } = await api.post(`https://speed.onrocket.com/api/full`, {
+		url,
 	});
-
-	const { new_url } = await response.json();
 	return new_url;
 };
 
 export const fetchPerformanceResults = async url => {
-	const response = await fetch(`http://64.227.57.174/api/gtmetrix`, {
-		method: 'POST',
-		headers,
-		body: JSON.stringify({ url }),
-	});
-	const performanceResults = await response.json();
+	const performanceResults = await api.post(
+		`https://report.onrocket.com/api/gtmetrix`,
+		{ url }
+	);
 	return performanceResults;
 
 	// FOR TESTING PURPOSES
