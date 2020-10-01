@@ -8,10 +8,10 @@ import {
 	rerunTestProgress,
 } from '../../core/constants';
 import TestProgressList from './TestProgressList';
-import TestComplete from '../TestComplete';
+import TestComplete from './TestComplete';
 import * as qs from 'query-string';
 import Form from './Form';
-import './testForm.css';
+import PerformanceBanner from './PerformanceBanner';
 
 const getInitialUrl = () => {
 	const { url: initialUrl = '' } = qs.parse(window.location.search);
@@ -26,9 +26,10 @@ const getInitialUrl = () => {
 };
 
 const TestForm = ({ onStart, onSuccess }) => {
-	const [originalUrl, setOriginalUrl] = React.useState(getInitialUrl());
+	const [originalUrl, setOriginalUrl] = React.useState();
 	const [clonedUrl, setClonedUrl] = React.useState('');
 
+	const [pageLoadTimeDiff, setPageLoadTimeDiff] = React.useState();
 	const [isTestInProgress, setIsTestInProgress] = React.useState(false);
 	const [isTestComplete, setIsTestComplete] = React.useState(false);
 	const [testAttempt, setTestAttempt] = React.useState({});
@@ -90,17 +91,17 @@ const TestForm = ({ onStart, onSuccess }) => {
 			);
 
 			// UX only, no logic
-			await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
-			await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, 7);
-			await waitAndUpdateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, 5);
-			await waitAndUpdateTestSequenceProgress(testSequence.INIT_CLONED_SITE, 1);
+			//await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
+			//await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, 7);
+			//await waitAndUpdateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, 5);
+			//await waitAndUpdateTestSequenceProgress(testSequence.INIT_CLONED_SITE, 1);
 
 			updateTestSequenceProgress(
 				testSequence.PERFORMING_TEST,
 				TestProgressStatus.IN_PROGRESS
 			);
 			const [
-				realWebsitePerformanceResults,
+				originalWebsitePerformanceResults,
 				clonedWebsitePerformanceResults,
 			] = await Promise.all([
 				service.fetchPerformanceResults(url),
@@ -116,7 +117,17 @@ const TestForm = ({ onStart, onSuccess }) => {
 			// Enables run button
 			setIsTestInProgress(false);
 
-			onSuccess(realWebsitePerformanceResults, clonedWebsitePerformanceResults);
+			const { cloned, original } = utils.extractPerformanceProps(
+				originalWebsitePerformanceResults,
+				clonedWebsitePerformanceResults
+			);
+
+			const pageLoadTimeDiff = utils.calculateDiffPercentage(
+				cloned.pageLoadTime.data,
+				original.pageLoadTime.data
+			);
+			setPageLoadTimeDiff(pageLoadTimeDiff);
+			onSuccess(original, cloned);
 		},
 		[incrementTestAttempt, setIsTestComplete, onSuccess, onStart]
 	);
@@ -137,7 +148,7 @@ const TestForm = ({ onStart, onSuccess }) => {
 			incrementTestAttempt(url);
 
 			const [
-				realWebsitePerformanceResults,
+				originalWebsitePerformanceResults,
 				clonedWebsitePerformanceResults,
 			] = await Promise.all([
 				service.fetchPerformanceResults(originalOrigin),
@@ -149,7 +160,17 @@ const TestForm = ({ onStart, onSuccess }) => {
 			// Enables run button
 			setIsTestInProgress(false);
 
-			onSuccess(realWebsitePerformanceResults, clonedWebsitePerformanceResults);
+			const { cloned, original } = utils.extractPerformanceProps(
+				originalWebsitePerformanceResults,
+				clonedWebsitePerformanceResults
+			);
+
+			const pageLoadTimeDiff = utils.calculateDiffPercentage(
+				cloned.pageLoadTime.data,
+				original.pageLoadTime.data
+			);
+			setPageLoadTimeDiff(pageLoadTimeDiff);
+			onSuccess(original, cloned);
 		},
 		[originalUrl, clonedUrl, incrementTestAttempt, onSuccess, onStart]
 	);
@@ -158,18 +179,20 @@ const TestForm = ({ onStart, onSuccess }) => {
 	const isRerun = attemptNumber > 0;
 	const onSubmit = isRerun ? handleRerunTest : handleRunTest;
 	return (
-		<div className="test-form">
-			<div className="test-form__form-wrapper">
-				<Form
-					isTestInProgress={isTestInProgress}
-					isRerun={isRerun}
-					onSubmit={onSubmit}
-				/>
-			</div>
+		<div className="test test--component">
+			<Form
+				isTestInProgress={isTestInProgress}
+				isRerun={isRerun}
+				onSubmit={onSubmit}
+				defaultUrl={getInitialUrl()}
+			/>
 			{!isTestComplete ? (
 				<TestProgressList testSequenceProgress={testSequenceProgress} />
 			) : (
-				<TestComplete attemptNumber={attemptNumber} />
+				<>
+					<TestComplete attemptNumber={attemptNumber} />
+					<PerformanceBanner diff={pageLoadTimeDiff} />
+				</>
 			)}
 		</div>
 	);

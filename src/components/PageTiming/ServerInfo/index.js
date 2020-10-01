@@ -1,22 +1,21 @@
 import React from 'react';
 import unknownServerImg from '../../../assets/unknown-server.svg';
-import './serverInfo.css';
 
-const ServerInfo = ({ name, location, imgSrc = unknownServerImg }) => {
-	const isUnknown = !name && !location;
-	const className = ['server', isUnknown ? 'server--unknown' : ''].join(' ');
+const ServerInfo = ({
+	name = 'Unknown',
+	location = 'Unknown',
+	imgSrc = unknownServerImg,
+}) => {
 	return (
-		<div className={className}>
-			<div className="server-logo">
-				<img src={imgSrc} alt="logo" />
-			</div>
-			<div className="server-info">
-				<div className="server-info__name">{name || 'Unknown Host'}</div>
-				<div className="server-info__location">
-					<div className="location__label">Server location:</div>
-					<div className="location__name">{location || 'Unknown Location'}</div>
-				</div>
-			</div>
+		<div className="card__test">
+			<i class="card__test-icon">
+				<img src={imgSrc} alt="Rocket" loading="lazy" />
+			</i>
+			<ul class="card__test-server">
+				<li>{name}</li>
+				<li>Server location:</li>
+				<li>{location}</li>
+			</ul>
 		</div>
 	);
 };

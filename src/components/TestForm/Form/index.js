@@ -1,9 +1,6 @@
 import React from 'react';
 import * as qs from 'query-string';
-import './form.css';
 import { validateURL } from '../../../core/utils';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStopwatch } from '@fortawesome/free-solid-svg-icons';
 
 const getInitialUrl = () => {
 	const { url: initialUrl = '' } = qs.parse(window.location.search);
@@ -17,7 +14,7 @@ const getInitialUrl = () => {
 		: `https://${trimmedUrl}`;
 };
 
-const Form = ({ isTestInProgress, isRerun, onSubmit }) => {
+const Form = ({ isTestInProgress, isRerun, onSubmit, defaultUrl }) => {
 	const inputRef = React.useRef(getInitialUrl());
 
 	const handleSubmit = React.useCallback(
@@ -31,28 +28,30 @@ const Form = ({ isTestInProgress, isRerun, onSubmit }) => {
 	);
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<div className="test-form__form-container">
-				<div className="test-form__form-fields">
-					<input
-						className="test-form__input"
-						required
-						placeholder="Enter URL to test"
-						type="url"
-						name="url"
-						ref={inputRef}
-					/>
-					<button
-						disabled={isTestInProgress}
-						type="submit"
-						className="test-form__button test-form__button--blue"
-					>
-						<FontAwesomeIcon icon={faStopwatch} />
-						{isRerun ? 'Rerun test' : 'Run test'}
-					</button>
+		<div className="test__form">
+			<form onSubmit={handleSubmit}>
+				<div className="field field--xl field--white">
+					<div className="field__helper">
+						<input
+							className="field__input"
+							required
+							placeholder="Enter URL to test"
+							type="url"
+							ref={inputRef}
+							defaultValue={defaultUrl}
+						/>
+						<button
+							disabled={isTestInProgress}
+							type="submit"
+							className="button button--l button--curious-blue button--fill"
+						>
+							<i class="fal fa-stopwatch margin margin--r-s"></i>{' '}
+							{isRerun ? 'Rerun test' : 'Run test'}
+						</button>
+					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	);
 };
 

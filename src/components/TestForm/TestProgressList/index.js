@@ -3,21 +3,18 @@ import {
 	testSequenceLabels,
 	TestProgressStatus,
 } from '../../../core/constants';
-import './testProgressList.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faSpinner, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const testSequenceEntries = Object.entries(testSequenceLabels);
 
 const getTestProgressIcon = status => {
 	switch (status) {
 		case TestProgressStatus.IN_PROGRESS:
-			return <FontAwesomeIcon icon={faSpinner} spin />;
+			return <i class="fal fa-spinner fa-spin fa-fw margin margin--r-s" />;
 		case TestProgressStatus.DONE:
-			return <FontAwesomeIcon icon={faCheck} />;
+			return <i class="fal fa-check fa-fw margin margin--r-s" />;
 		case TestProgressStatus.PENDING:
 		default:
-			return <FontAwesomeIcon icon={faMinus} />;
+			return <i class="fal fa-minus fa-fw margin margin--r-s" />;
 	}
 };
 
@@ -45,14 +42,11 @@ const TestProgressList = ({ testSequenceProgress }) => {
 			const status = testSequenceProgress[key];
 
 			const className = [
-				'test-progress-list__item',
-				status === TestProgressStatus.DONE
-					? 'test-progress-list__item--done'
-					: '',
-				status === TestProgressStatus.IN_PROGRESS
-					? 'test-progress-list__item--in-progress'
-					: '',
-			].join(' ');
+				status === TestProgressStatus.DONE ? 'color color--limeade' : '',
+				status === TestProgressStatus.IN_PROGRESS ? 'color color--orient' : '',
+			]
+				.join(' ')
+				.trim();
 
 			return (
 				<li
@@ -70,8 +64,8 @@ const TestProgressList = ({ testSequenceProgress }) => {
 	);
 
 	return (
-		<div className="test-progress-list">
-			<ul ref={ulRef} className="test-progress-list__container">
+		<div className="test__scroll">
+			<ul ref={ulRef} style={{ transform: 'translateY(0)' }}>
 				{testSequenceEntries.map(renderItem)}
 			</ul>
 		</div>
