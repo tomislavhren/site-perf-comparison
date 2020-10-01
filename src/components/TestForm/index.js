@@ -91,10 +91,10 @@ const TestForm = ({ onStart, onSuccess }) => {
 			);
 
 			// UX only, no logic
-			//await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
-			//await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, 7);
-			//await waitAndUpdateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, 5);
-			//await waitAndUpdateTestSequenceProgress(testSequence.INIT_CLONED_SITE, 1);
+			await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
+			await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_ASSETS, 7);
+			await waitAndUpdateTestSequenceProgress(testSequence.OPTIMIZE_ASSETS, 5);
+			await waitAndUpdateTestSequenceProgress(testSequence.INIT_CLONED_SITE, 1);
 
 			updateTestSequenceProgress(
 				testSequence.PERFORMING_TEST,
