@@ -45,7 +45,7 @@ const TimingItem = ({
 					tooltipText={tooltipText}
 					tooltipId={tooltipId}
 				>
-					<i class="fal fa-question-circle" />
+					<i className="fal fa-question-circle" />
 				</IconButtonWithTooltip>
 			</li>
 			<li>{renderDiff()}</li>

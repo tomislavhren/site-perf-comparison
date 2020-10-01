@@ -33,10 +33,10 @@ const App = () => {
 			>
 				<div className="spacing spacing--l spacing--b-none">
 					<div className="cnt align align--center">
-						<h1 class="title title--l color color--black-pearl distance distance--xs">
+						<h1 className="title title--l color color--black-pearl distance distance--xs">
 							Test Drive Your Site on Rocket
 						</h1>
-						<div class="paragraph paragraph--l distance distance--m">
+						<div className="paragraph paragraph--l distance distance--m">
 							<p>
 								Compare how your site performs right now vs how it would perform
 								on the Rocket platform,

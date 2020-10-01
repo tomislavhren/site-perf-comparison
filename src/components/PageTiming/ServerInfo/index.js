@@ -8,10 +8,10 @@ const ServerInfo = ({
 }) => {
 	return (
 		<div className="card__test">
-			<i class="card__test-icon">
+			<i className="card__test-icon">
 				<img src={imgSrc} alt="Rocket" loading="lazy" />
 			</i>
-			<ul class="card__test-server">
+			<ul className="card__test-server">
 				<li>{name}</li>
 				<li>Server location:</li>
 				<li>{location}</li>

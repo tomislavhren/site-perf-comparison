@@ -10,17 +10,17 @@ const IconButtonWithTooltip = ({
 		<>
 			<button
 				type="button"
-				class="button button--link margin margin--l-xxs"
+				className="button button--link margin margin--l-xxs"
 				data-tooltip={tooltipId}
 			>
 				{children}
 			</button>
-			<div class="tooltip tooltip--ttfb-rocket" style={{ margin: '0px' }}>
-				<i class="tooltip__arrow" data-popper-arrow=""></i>
-				<div class="tooltip__content">
-					<div class="paragraph paragraph--xs font font--montserrat font--regular align align--left">
+			<div className="tooltip tooltip--ttfb-rocket" style={{ margin: '0px' }}>
+				<i className="tooltip__arrow" data-popper-arrow=""></i>
+				<div className="tooltip__content">
+					<div className="paragraph paragraph--xs font font--montserrat font--regular align align--left">
 						<p>
-							<strong class="color color--woodsmoke">{tooltipTitle}</strong>
+							<strong className="color color--woodsmoke">{tooltipTitle}</strong>
 							<br />
 							{tooltipText}
 						</p>

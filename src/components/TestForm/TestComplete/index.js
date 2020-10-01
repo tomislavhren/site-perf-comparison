@@ -23,7 +23,7 @@ const TestComplete = ({ attemptNumber }) => {
 		<ul className="test__setup">
 			<li>
 				Test Complete{' '}
-				<i class="fal fa-check color color--limeade margin margin--l-xxs"></i>
+				<i className="fal fa-check color color--limeade margin margin--l-xxs"></i>
 			</li>
 			<li>
 				{attempt} load{' '}
@@ -31,7 +31,7 @@ const TestComplete = ({ attemptNumber }) => {
 					tooltipTitle={`${attempt} load`}
 					tooltipText="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam eaque doloribus, libero cupiditate ullam molestiae minus deserunt soluta nesciunt."
 				>
-					<i class="fal fa-question-circle"></i>
+					<i className="fal fa-question-circle"></i>
 				</IconButtonWithTooltip>
 			</li>
 		</ul>

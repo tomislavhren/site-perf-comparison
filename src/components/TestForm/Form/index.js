@@ -1,6 +1,6 @@
 import React from 'react';
 import * as qs from 'query-string';
-import { validateURL } from '../../../core/utils';
+import { sanitizeAndValidateURL } from '../../../core/utils';
 
 const getInitialUrl = () => {
 	const { url: initialUrl = '' } = qs.parse(window.location.search);
@@ -20,8 +20,7 @@ const Form = ({ isTestInProgress, isRerun, onSubmit, defaultUrl }) => {
 	const handleSubmit = React.useCallback(
 		e => {
 			e.preventDefault();
-			const url = inputRef.current.value;
-			validateURL(url);
+			const url = sanitizeAndValidateURL(inputRef.current.value);
 			onSubmit(url);
 		},
 		[onSubmit]
@@ -45,7 +44,7 @@ const Form = ({ isTestInProgress, isRerun, onSubmit, defaultUrl }) => {
 							type="submit"
 							className="button button--l button--curious-blue button--fill"
 						>
-							<i class="fal fa-stopwatch margin margin--r-s"></i>{' '}
+							<i className="fal fa-stopwatch margin margin--r-s"></i>{' '}
 							{isRerun ? 'Rerun test' : 'Run test'}
 						</button>
 					</div>

@@ -85,13 +85,13 @@ export const extractPerformanceProps = (
 	};
 };
 
-export const validateURL = url => {
-	const { origin } = new URL(url);
+export const sanitizeAndValidateURL = url => {
+	const { origin, href } = new URL(url);
 	if (!origin || origin === 'null') {
 		throw new Error(`Something is wrong with the URL: ${url}`);
 	}
 
-	return origin;
+	return href.replace(/(.*)\/$/, '$1');
 };
 
 export const calculateDiffPercentage = (newValue, oldValue) => {

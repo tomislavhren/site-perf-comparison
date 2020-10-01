@@ -9,12 +9,12 @@ const testSequenceEntries = Object.entries(testSequenceLabels);
 const getTestProgressIcon = status => {
 	switch (status) {
 		case TestProgressStatus.IN_PROGRESS:
-			return <i class="fal fa-spinner fa-spin fa-fw margin margin--r-s" />;
+			return <i className="fal fa-spinner fa-spin fa-fw margin margin--r-s" />;
 		case TestProgressStatus.DONE:
-			return <i class="fal fa-check fa-fw margin margin--r-s" />;
+			return <i className="fal fa-check fa-fw margin margin--r-s" />;
 		case TestProgressStatus.PENDING:
 		default:
-			return <i class="fal fa-minus fa-fw margin margin--r-s" />;
+			return <i className="fal fa-minus fa-fw margin margin--r-s" />;
 	}
 };
 
