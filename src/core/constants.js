@@ -10,7 +10,7 @@ export const testSequence = {
 export const testSequenceLabels = {
 	[testSequence.VERIFY_URL]: 'Verify site URL',
 	[testSequence.DOWNLOAD_HTML]: 'Download HTML',
-	[testSequence.DOWNLOAD_ASSETS]: 'Download CSS, JavScript, Images...',
+	[testSequence.DOWNLOAD_ASSETS]: 'Download CSS, JavaScript, Images...',
 	[testSequence.OPTIMIZE_ASSETS]: 'Optimize Images & Fonts',
 	[testSequence.INIT_CLONED_SITE]: 'Initialize Cloned Site on Rocket',
 	[testSequence.PERFORMING_TEST]: 'Performing Test',

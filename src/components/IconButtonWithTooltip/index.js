@@ -15,7 +15,7 @@ const IconButtonWithTooltip = ({
 			>
 				{children}
 			</button>
-			<div className="tooltip tooltip--ttfb-rocket" style={{ margin: '0px' }}>
+			<div className={`tooltip ${tooltipId}`} style={{ margin: '0px' }}>
 				<i className="tooltip__arrow" data-popper-arrow=""></i>
 				<div className="tooltip__content">
 					<div className="paragraph paragraph--xs font font--montserrat font--regular align align--left">

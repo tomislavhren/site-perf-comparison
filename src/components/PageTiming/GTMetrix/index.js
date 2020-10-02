@@ -17,7 +17,8 @@ const GTMetrix = ({
 			<ReportThumbnail reportUrl={reportUrl} />
 			<div className="card__gtmetrix-results">
 				<TimingItem
-					result={ttfb.data && `${ttfb.data} ms`}
+					result={ttfb.data}
+					unit="ms"
 					label="TTFB"
 					percentageDiff={ttfb.diff}
 					tooltipId={`tooltip--ttf-${tooltipSuffix}`}
@@ -26,7 +27,8 @@ const GTMetrix = ({
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={firstPaintTime.data && `${firstPaintTime.data} ms`}
+					result={firstPaintTime.data}
+					unit="ms"
 					percentageDiff={firstPaintTime.diff}
 					label="First Paint"
 					tooltipId={`tooltip--first-paint-${tooltipSuffix}`}
@@ -41,7 +43,10 @@ const GTMetrix = ({
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={pageSpeedScore.data && `A (${pageSpeedScore.data}%)`}
+					result={pageSpeedScore.data}
+					positiveLabel="better"
+					negativeLabel="lower"
+					unit="percentage"
 					label="PageSpeed Score"
 					percentageDiff={pageSpeedScore.diff}
 					tooltipId={`tooltip--page-speed-score-${tooltipSuffix}`}
@@ -50,7 +55,10 @@ const GTMetrix = ({
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={ySlowScore.data && `A (${ySlowScore.data}%)`}
+					result={ySlowScore.data}
+					positiveLabel="better"
+					negativeLabel="lower"
+					unit="percentage"
 					percentageDiff={ySlowScore.diff}
 					label="YSlow Score"
 					tooltipId={`tooltip--yslow-score-${tooltipSuffix}`}

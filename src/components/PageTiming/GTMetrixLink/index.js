@@ -1,11 +1,10 @@
 import React from 'react';
 
-const GTMetrixLink = ({ reportUrl }) => {
+const GTMetrixLink = ({ reportUrl, label }) => {
 	return (
 		<div className="card__url">
 			<a href={reportUrl} target="_blank" rel="noopener noreferrer">
-				Check rocket score on GTMetrix{' '}
-				<i className="fal fa-external-link margin margin--l-xs"></i>
+				{label} <i className="fal fa-external-link margin margin--l-xs"></i>
 			</a>
 		</div>
 	);

@@ -61,10 +61,12 @@ const App = () => {
 										serverImgSrc="https://clients.coder.page/rocket/wordpress/wp-content/themes/rocket/dist/img/components/card/rocket.svg"
 										data={performance.cloned}
 										isRocket={true}
+										gtmetrixLinkLabel="Check Rocket.net score on GTMetrix"
 									/>
 									<PageTiming
 										serverImgSrc="https://clients.coder.page/rocket/wordpress/wp-content/themes/rocket/dist/img/components/card/unknown.svg"
 										data={performance.original}
+										gtmetrixLinkLabel="Check origin score on GTMetrix"
 									/>
 								</div>
 							</div>

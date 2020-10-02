@@ -9,6 +9,7 @@ const PageTiming = ({
 	serverImgSrc,
 	isRocket,
 	data,
+	gtmetrixLinkLabel,
 }) => {
 	const {
 		ttfb,
@@ -40,7 +41,9 @@ const PageTiming = ({
 					/>
 				)}
 
-				{data && <GTMetrixLink reportUrl={reportUrl} />}
+				{data && (
+					<GTMetrixLink label={gtmetrixLinkLabel} reportUrl={reportUrl} />
+				)}
 			</div>
 		</div>
 	);
