@@ -11112,6 +11112,9 @@ const tooltipButton = document.querySelectorAll('[data-tooltip]'),
 	tooltipElement = document.querySelectorAll('.tooltip'),
 	tooltipInstance = [];
 for (let e = 0; e < tooltipButton.length; e++) {
+	console.log('tusa,');
+	debugger;
+
 	function tooltipCreate() {
 		tooltipInstance[e] = Popper.createPopper(
 			tooltipButton[e],

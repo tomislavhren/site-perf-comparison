@@ -28,6 +28,7 @@ const TestComplete = ({ attemptNumber }) => {
 			<li>
 				{attempt} load{' '}
 				<IconButtonWithTooltip
+					tooltipId="tooltip--first-load"
 					tooltipTitle={`${attempt} load`}
 					tooltipText="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam eaque doloribus, libero cupiditate ullam molestiae minus deserunt soluta nesciunt."
 				>
