@@ -10,7 +10,6 @@ const TimingItem = ({
 	tooltipText,
 	percentageDiff,
 	highlighted,
-	unit,
 	positiveLabel = 'faster',
 	negativeLabel = 'slower',
 }) => {
@@ -26,20 +25,19 @@ const TimingItem = ({
 				: 'card__gtmetrix-percentage--milano-red',
 		].join(' ');
 
-		const value = toPercentageString(percentageDiff);
 		return (
 			<span className={className}>
-				{unit === 'ms' ? `${value} ms` : `A (${value}%)`}{' '}
+				{toPercentageString(percentageDiff)}{' '}
 				{isFaster ? positiveLabel : negativeLabel}
 			</span>
 		);
-	}, [percentageDiff, unit, positiveLabel, negativeLabel]);
+	}, [percentageDiff, positiveLabel, negativeLabel]);
 
 	return (
 		<ul className="card__gtmetrix-results-result">
 			<li>
 				<span className={highlighted ? 'color color--curious-blue' : ''}>
-					{result || '-'}
+					{result}
 				</span>
 			</li>
 			<li>

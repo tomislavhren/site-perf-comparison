@@ -2,6 +2,17 @@ import React from 'react';
 import ReportThumbnail from '../ReportThumbnail';
 import TimingItem from '../TimingItem';
 
+const getGrade = score => {
+	const index = 10 - (Math.floor(score / 10) + (score < 100 ? 1 : 0));
+	return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'][index];
+};
+
+const formatMs = value => `${value} ms`;
+
+const formatYSlowScore = score => `${getGrade(score)} (${score}%)`;
+
+const formatPageSpeedScore = score => `${getGrade(score)} (${score}*%)`;
+
 const GTMetrix = ({
 	reportUrl,
 	ttfb,
@@ -12,13 +23,13 @@ const GTMetrix = ({
 	isRocket,
 }) => {
 	const tooltipSuffix = isRocket ? 'rocket' : 'origin';
+
 	return (
 		<div className="card__gtmetrix">
 			<ReportThumbnail reportUrl={reportUrl} />
 			<div className="card__gtmetrix-results">
 				<TimingItem
-					result={ttfb.data}
-					unit="ms"
+					result={formatMs(ttfb.data)}
 					label="TTFB"
 					percentageDiff={ttfb.diff}
 					tooltipId={`tooltip--ttf-${tooltipSuffix}`}
@@ -27,8 +38,7 @@ const GTMetrix = ({
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={firstPaintTime.data}
-					unit="ms"
+					result={formatMs(firstPaintTime.data)}
 					percentageDiff={firstPaintTime.diff}
 					label="First Paint"
 					tooltipId={`tooltip--first-paint-${tooltipSuffix}`}
@@ -37,16 +47,15 @@ const GTMetrix = ({
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={pageLoadTime.data && `${pageLoadTime.data} ms`}
+					result={formatMs(pageLoadTime.data)}
 					percentageDiff={pageLoadTime.diff}
 					label="Page Load Time"
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={pageSpeedScore.data}
+					result={formatPageSpeedScore(pageSpeedScore.data)}
 					positiveLabel="better"
 					negativeLabel="lower"
-					unit="percentage"
 					label="PageSpeed Score"
 					percentageDiff={pageSpeedScore.diff}
 					tooltipId={`tooltip--page-speed-score-${tooltipSuffix}`}
@@ -55,10 +64,9 @@ const GTMetrix = ({
 					highlighted={isRocket}
 				/>
 				<TimingItem
-					result={ySlowScore.data}
+					result={formatYSlowScore(ySlowScore.data)}
 					positiveLabel="better"
 					negativeLabel="lower"
-					unit="percentage"
 					percentageDiff={ySlowScore.diff}
 					label="YSlow Score"
 					tooltipId={`tooltip--yslow-score-${tooltipSuffix}`}
