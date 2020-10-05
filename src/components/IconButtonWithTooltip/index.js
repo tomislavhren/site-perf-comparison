@@ -2,6 +2,7 @@
 /* eslint-disable no-loop-func */
 /* eslint-disable no-unused-expressions */
 import React from 'react';
+import { createPopper } from '@popperjs/core';
 
 const IconButtonWithTooltip = ({
 	children,
@@ -15,7 +16,7 @@ const IconButtonWithTooltip = ({
 
 	function tooltipCreate() {
 		Popper &&
-			(tooltipRef.current = Popper.createPopper(
+			(tooltipRef.current = createPopper(
 				tooltipButtonRef.current,
 				tooltipElementRef.current,
 				{
@@ -28,6 +29,7 @@ const IconButtonWithTooltip = ({
 		tooltipRef.current &&
 			(tooltipRef.current.destroy(), (tooltipRef.current = null));
 	}
+
 	function tooltipShow() {
 		tooltipElementRef.current.classList.add('is-active');
 		tooltipCreate();
