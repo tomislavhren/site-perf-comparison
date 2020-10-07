@@ -30,15 +30,6 @@ export const getClonerStatus = async (jobId, callback) => {
 	}
 };
 
-export const cloneWebsite = async url => {
-	//const { new_url } = await api.post(`https://speed.onrocket.com/api/full`, {
-	//	url,
-	//});
-	//return new_url;
-
-	return Promise.resolve('https://compare.onrocket.com/bluesy-saffron-drever');
-};
-
 export const fetchPerformanceResults = async url => {
 	const performanceResults = await api.post(`https://report.onrocket.com/api/gtmetrix`, { url });
 	return performanceResults;
