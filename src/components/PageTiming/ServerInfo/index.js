@@ -9,7 +9,7 @@ const ServerInfo = ({
 	return (
 		<div className="card__test">
 			<i className="card__test-icon">
-				<img src={imgSrc} alt="Rocket" loading="lazy" />
+				<img src={imgSrc} alt="Rocket.net" loading="lazy" />
 			</i>
 			<ul className="card__test-server">
 				<li>{name}</li>

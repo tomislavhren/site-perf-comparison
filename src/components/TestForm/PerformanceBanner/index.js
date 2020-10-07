@@ -8,7 +8,8 @@ const PerformanceBanner = ({ diff }) => {
 			<h2 className="title title--l color color--black-pearl distance distance--xxs">
 				Your site loads{' '}
 				<span className={isFaster ? 'color color--limeade' : ''}>
-					{toPercentageString(diff)} {isFaster ? 'faster' : 'slower'} on Rocket!
+					{toPercentageString(diff)} {isFaster ? 'faster' : 'slower'} on
+					Rocket.net!
 				</span>
 			</h2>
 			<div className="paragraph paragraph--m">

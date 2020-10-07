@@ -12,7 +12,7 @@ export const testSequenceLabels = {
 	[testSequence.DOWNLOAD_HTML]: 'Download HTML',
 	[testSequence.DOWNLOAD_ASSETS]: 'Download CSS, JavaScript, Images...',
 	[testSequence.OPTIMIZE_ASSETS]: 'Optimize Images & Fonts',
-	[testSequence.INIT_CLONED_SITE]: 'Initialize Cloned Site on Rocket',
+	[testSequence.INIT_CLONED_SITE]: 'Initialize Cloned Site on Rocket.net',
 	[testSequence.PERFORMING_TEST]: 'Performing Test',
 };
 

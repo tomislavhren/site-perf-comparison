@@ -1,6 +1,8 @@
 import React from 'react';
 import PageTiming from './components/PageTiming';
 import TestForm from './components/TestForm';
+import rocketImg from './assets/rocket.svg';
+import unknownImg from './assets/unknown-server.svg';
 
 const App = () => {
 	const [performance, setPerformance] = React.useState({
@@ -34,12 +36,12 @@ const App = () => {
 				<div className="spacing spacing--l spacing--b-none">
 					<div className="cnt align align--center">
 						<h1 className="title title--l color color--black-pearl distance distance--xs">
-							Test Drive Your Site on Rocket
+							Test Drive Your Site on Rocket.net
 						</h1>
 						<div className="paragraph paragraph--l distance distance--m">
 							<p>
 								Compare how your site performs right now vs how it would perform
-								on the Rocket platform,
+								on the Rocket.net platform,
 								<br />
 								just enter the site URL and go!
 							</p>
@@ -56,15 +58,15 @@ const App = () => {
 							<div className="test__cards">
 								<div className="row">
 									<PageTiming
-										serverName="Rocket"
-										serverLocation="Atlanta, Georgia, USA"
-										serverImgSrc="https://clients.coder.page/rocket/wordpress/wp-content/themes/rocket/dist/img/components/card/rocket.svg"
+										serverName="Rocket.net"
+										serverLocation="Dallas, Texas, USA"
+										serverImgSrc={rocketImg}
 										data={performance.cloned}
 										isRocket={true}
 										gtmetrixLinkLabel="Check Rocket.net score on GTMetrix"
 									/>
 									<PageTiming
-										serverImgSrc="https://clients.coder.page/rocket/wordpress/wp-content/themes/rocket/dist/img/components/card/unknown.svg"
+										serverImgSrc={unknownImg}
 										data={performance.original}
 										gtmetrixLinkLabel="Check origin score on GTMetrix"
 									/>
