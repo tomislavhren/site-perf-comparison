@@ -74,13 +74,21 @@ const TestForm = ({ onStart, onSuccess }) => {
 		[setTestSequenceProgress]
 	);
 
-	const waitAndMarkAsDone = React.useCallback(
+	const waitAndUpdateProgress = React.useCallback(
 		async (key, time) => {
 			markAsInProgress(key);
 			await utils.wait(time);
 			markAsDone(key);
 		},
 		[markAsInProgress, markAsDone]
+	);
+
+	const waitAndMarkAsDone = React.useCallback(
+		async (key, time) => {
+			await utils.wait(time);
+			markAsDone(key);
+		},
+		[markAsDone]
 	);
 
 	const cloneWebsite = React.useCallback(
@@ -93,19 +101,13 @@ const TestForm = ({ onStart, onSuccess }) => {
 					// start cloner and wait for job id
 					const jobId = await service.startCloner(url);
 
-					let receivedDownloadHtmlStatus = false;
-					let receivedDownloadFilesStatus = false;
-
 					// ping the cloner for the status update
 					const newUrl = await service.getClonerStatus(jobId, (status, data) => {
 						switch (status) {
 							case 'DOWNLOAD_HTML':
-								receivedDownloadHtmlStatus = true;
 								markAsInProgress(TestSequence.DOWNLOAD_HTML, data.filesDone, data.filesCount);
 								break;
 							case 'DOWNLOAD_FILES':
-								receivedDownloadFilesStatus = true;
-								markAsDone(TestSequence.DOWNLOAD_HTML);
 								markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
 								break;
 							default:
@@ -115,8 +117,8 @@ const TestForm = ({ onStart, onSuccess }) => {
 
 					// if the cloner was really quick and we didn't get the time
 					// to receive any other status then SUCCESS
-					!receivedDownloadHtmlStatus && (await waitAndMarkAsDone(TestSequence.DOWNLOAD_HTML, 0.5));
-					!receivedDownloadFilesStatus && (await waitAndMarkAsDone(TestSequence.DOWNLOAD_ASSETS, 0.5));
+					await waitAndMarkAsDone(TestSequence.DOWNLOAD_HTML, 0.5);
+					await waitAndMarkAsDone(TestSequence.DOWNLOAD_ASSETS, 0.5);
 
 					// return the cloned url
 					resolve(newUrl);
@@ -125,7 +127,7 @@ const TestForm = ({ onStart, onSuccess }) => {
 				}
 			});
 		},
-		[markAsDone, waitAndMarkAsDone, markAsInProgress]
+		[waitAndMarkAsDone, markAsInProgress]
 	);
 
 	const handleRunTest = React.useCallback(
@@ -156,11 +158,11 @@ const TestForm = ({ onStart, onSuccess }) => {
 
 			let clonedWebsiteUrl = clonedUrl;
 			if (!isRerun) {
-				await waitAndMarkAsDone(TestSequence.VERIFY_URL, 1);
+				await waitAndUpdateProgress(TestSequence.VERIFY_URL, 1);
 				clonedWebsiteUrl = await cloneWebsite(url);
 				setClonedUrl(clonedWebsiteUrl);
-				await waitAndMarkAsDone(TestSequence.OPTIMIZE_ASSETS, 2);
-				await waitAndMarkAsDone(TestSequence.INIT_CLONED_SITE, 1);
+				await waitAndUpdateProgress(TestSequence.OPTIMIZE_ASSETS, 2);
+				await waitAndUpdateProgress(TestSequence.INIT_CLONED_SITE, 1);
 			}
 
 			markAsInProgress(TestSequence.PERFORMING_TEST);
@@ -186,7 +188,16 @@ const TestForm = ({ onStart, onSuccess }) => {
 			// this will propagate performance results and show cards
 			onSuccess(original, cloned);
 		},
-		[markAsInProgress, markAsDone, waitAndMarkAsDone, setIsTestComplete, onSuccess, onStart, clonedUrl, cloneWebsite]
+		[
+			markAsInProgress,
+			markAsDone,
+			waitAndUpdateProgress,
+			setIsTestComplete,
+			onSuccess,
+			onStart,
+			clonedUrl,
+			cloneWebsite,
+		]
 	);
 
 	const currentAttemptNumber = testAttemptRef.current[originalUrl] || 0;
