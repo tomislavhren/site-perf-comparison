@@ -108,7 +108,9 @@ const TestForm = ({ onStart, onSuccess }) => {
 								markAsInProgress(TestSequence.DOWNLOAD_HTML, data.filesDone, data.filesCount);
 								break;
 							case 'DOWNLOAD_FILES':
-								markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
+
+								markAsDone(TestSequence.DOWNLOAD_HTML);
+markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
 								break;
 							default:
 								throw new Error('UNKNOWN_CLONER_ERROR');
@@ -127,7 +129,7 @@ const TestForm = ({ onStart, onSuccess }) => {
 				}
 			});
 		},
-		[waitAndMarkAsDone, markAsInProgress]
+		[markAsDone, waitAndMarkAsDone, markAsInProgress]
 	);
 
 	const handleRunTest = React.useCallback(
