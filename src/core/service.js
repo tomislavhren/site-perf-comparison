@@ -31,8 +31,12 @@ export const getClonerStatus = async (jobId, callback) => {
 };
 
 export const fetchPerformanceResults = async url => {
-	const performanceResults = await api.post(`https://report.onrocket.com/api/gtmetrix`, { url });
-	return performanceResults;
+	try {
+		const performanceResults = await api.post(`https://report.onrocket.com/api/gtmetrix`, { url });
+		return performanceResults;
+	} catch (error) {
+		throw new Error(`We've ran into a problem with GTMetrix. Please try again.`);
+	}
 	//// FOR TESTING PURPOSES
 	//const mock = {
 	//	backend_duration: 76,
@@ -56,6 +60,5 @@ export const fetchPerformanceResults = async url => {
 	//	rum_speed_index: 828,
 	//	yslow_score: Math.floor(Math.random() * 101),
 	//};
-
 	//return mock;
 };

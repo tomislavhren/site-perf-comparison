@@ -4,6 +4,7 @@ import * as utils from '../../core/utils';
 import { TestSequence, TestProgressStatus, initialTestProgress, rerunTestProgress } from '../../core/constants';
 import TestProgressList from './TestProgressList';
 import TestComplete from './TestComplete';
+import TestError from './TestError';
 import * as qs from 'query-string';
 import Form from './Form';
 import PerformanceBanner from './PerformanceBanner';
@@ -22,6 +23,7 @@ const TestForm = ({ onStart, onSuccess }) => {
 	const [originalUrl, setOriginalUrl] = React.useState();
 	const [clonedUrl, setClonedUrl] = React.useState();
 
+	const [error, setError] = React.useState();
 	const [pageLoadTimeDiff, setPageLoadTimeDiff] = React.useState();
 	const [isTestInProgress, setIsTestInProgress] = React.useState(false);
 	const [isTestComplete, setIsTestComplete] = React.useState(false);
@@ -108,12 +110,11 @@ const TestForm = ({ onStart, onSuccess }) => {
 								markAsInProgress(TestSequence.DOWNLOAD_HTML, data.filesDone, data.filesCount);
 								break;
 							case 'DOWNLOAD_FILES':
-
 								markAsDone(TestSequence.DOWNLOAD_HTML);
-markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
+								markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
 								break;
 							default:
-								throw new Error('UNKNOWN_CLONER_ERROR');
+								throw new Error(`We've ran into a problem while cloning the site. Please try again.`);
 						}
 					});
 
@@ -134,61 +135,65 @@ markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
 
 	const handleRunTest = React.useCallback(
 		async url => {
-			onStart();
+			try {
+				onStart();
 
-			// Helper methods
-			const incrementTestAttempt = url => {
-				testAttemptRef.current[url] = testAttemptRef.current[url] ? testAttemptRef.current[url] + 1 : 1;
-				return testAttemptRef.current[url];
-			};
+				// Helper methods
+				const incrementTestAttempt = url => {
+					testAttemptRef.current[url] = testAttemptRef.current[url] ? testAttemptRef.current[url] + 1 : 1;
+					return testAttemptRef.current[url];
+				};
 
-			// 1. save the original url
-			setOriginalUrl(url);
+				// 1. save the original url
+				setOriginalUrl(url);
 
-			// 2. increase attempt number for the url
-			const isRerun = incrementTestAttempt(url) > 1;
+				// 2. increase attempt number for the url
+				const isRerun = incrementTestAttempt(url) > 1;
 
-			// 3. disable the button to prevent running test
-			// already in progress
-			setIsTestInProgress(true);
+				// 3. disable the button to prevent running test
+				// already in progress
+				setIsTestInProgress(true);
 
-			// 4. reset to initial state if it's not a rerun
-			setIsTestComplete(false);
-			setTestSequenceProgress({
-				...(isRerun ? rerunTestProgress : initialTestProgress),
-			});
+				// 4. reset to initial state if it's not a rerun
+				setIsTestComplete(false);
+				setTestSequenceProgress({
+					...(isRerun ? rerunTestProgress : initialTestProgress),
+				});
 
-			let clonedWebsiteUrl = clonedUrl;
-			if (!isRerun) {
-				await waitAndUpdateProgress(TestSequence.VERIFY_URL, 1);
-				clonedWebsiteUrl = await cloneWebsite(url);
-				setClonedUrl(clonedWebsiteUrl);
-				await waitAndUpdateProgress(TestSequence.OPTIMIZE_ASSETS, 2);
-				await waitAndUpdateProgress(TestSequence.INIT_CLONED_SITE, 1);
+				let clonedWebsiteUrl = clonedUrl;
+				if (!isRerun) {
+					await waitAndUpdateProgress(TestSequence.VERIFY_URL, 1);
+					clonedWebsiteUrl = await cloneWebsite(url);
+					setClonedUrl(clonedWebsiteUrl);
+					await waitAndUpdateProgress(TestSequence.OPTIMIZE_ASSETS, 2);
+					await waitAndUpdateProgress(TestSequence.INIT_CLONED_SITE, 1);
+				}
+
+				markAsInProgress(TestSequence.PERFORMING_TEST);
+				const [originalWebsitePerformanceResults, clonedWebsitePerformanceResults] = await Promise.all([
+					service.fetchPerformanceResults(url),
+					service.fetchPerformanceResults(clonedWebsiteUrl),
+				]);
+				markAsDone(TestSequence.PERFORMING_TEST);
+
+				const { cloned, original } = utils.extractPerformanceProps(
+					originalWebsitePerformanceResults,
+					clonedWebsitePerformanceResults
+				);
+
+				const pageLoadTimeDiff = utils.calculateDiffPercentage(cloned.pageLoadTime.data, original.pageLoadTime.data);
+				setPageLoadTimeDiff(pageLoadTimeDiff);
+
+				// this will propagate performance results and show cards
+				onSuccess(original, cloned);
+			} catch (error) {
+				setError(error.message);
+			} finally {
+				// Shows "Your site is X% faster" banner
+				setIsTestComplete(true);
+				// Enables run button
+				setIsTestInProgress(false);
 			}
-
-			markAsInProgress(TestSequence.PERFORMING_TEST);
-			const [originalWebsitePerformanceResults, clonedWebsitePerformanceResults] = await Promise.all([
-				service.fetchPerformanceResults(url),
-				service.fetchPerformanceResults(clonedWebsiteUrl),
-			]);
-			markAsDone(TestSequence.PERFORMING_TEST);
-
-			// Shows "Your site is X% faster" banner
-			setIsTestComplete(true);
-			// Enables run button
-			setIsTestInProgress(false);
-
-			const { cloned, original } = utils.extractPerformanceProps(
-				originalWebsitePerformanceResults,
-				clonedWebsitePerformanceResults
-			);
-
-			const pageLoadTimeDiff = utils.calculateDiffPercentage(cloned.pageLoadTime.data, original.pageLoadTime.data);
-			setPageLoadTimeDiff(pageLoadTimeDiff);
-
-			// this will propagate performance results and show cards
-			onSuccess(original, cloned);
 		},
 		[
 			markAsInProgress,
@@ -212,7 +217,9 @@ markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
 				onSubmit={handleRunTest}
 				defaultUrl={getInitialUrl()}
 			/>
-			{!isTestComplete ? (
+			{error ? (
+				<TestError message={error} />
+			) : !isTestComplete ? (
 				<TestProgressList testSequenceProgress={testSequenceProgress} />
 			) : (
 				<>

@@ -4,7 +4,7 @@ const defaultConfig = {
 	headers: {
 		'Content-Type': 'application/json',
 	},
-	timeout: 120 * 1000, // 120s
+	timeout: 150 * 1000, // 120s
 };
 
 const get = async (url, config = defaultConfig) => {
