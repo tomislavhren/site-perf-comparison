@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-	testSequenceLabels,
-	TestProgressStatus,
-} from '../../../core/constants';
+import { testSequenceLabels, TestProgressStatus } from '../../../core/constants';
 
 const testSequenceEntries = Object.entries(testSequenceLabels);
 
@@ -23,40 +20,32 @@ const TestProgressList = ({ testSequenceProgress }) => {
 
 	React.useEffect(() => {
 		const statusInProgress = Object.keys(testSequenceProgress).find(
-			key => testSequenceProgress[key] === TestProgressStatus.IN_PROGRESS
+			key => testSequenceProgress[key].status === TestProgressStatus.IN_PROGRESS
 		);
-		const li = document.querySelector(
-			`[data-animation-id='${statusInProgress}']`
-		);
+		const li = document.querySelector(`[data-animation-id='${statusInProgress}']`);
 
 		if (li) {
 			const liIndex = +li.getAttribute('data-animation-index');
-			ulRef.current.style.transform = `translateY(-${
-				liIndex * li.clientHeight
-			}px)`;
+			ulRef.current.style.transform = `translateY(-${liIndex * li.clientHeight}px)`;
 		}
 	}, [testSequenceProgress]);
 
 	const renderItem = React.useCallback(
 		([key, text], index) => {
-			const status = testSequenceProgress[key];
+			const test = testSequenceProgress[key];
 
 			const className = [
-				status === TestProgressStatus.DONE ? 'color color--limeade' : '',
-				status === TestProgressStatus.IN_PROGRESS ? 'color color--orient' : '',
+				test.status === TestProgressStatus.DONE ? 'color color--limeade' : '',
+				test.status === TestProgressStatus.IN_PROGRESS ? 'color color--orient' : '',
 			]
 				.join(' ')
 				.trim();
 
 			return (
-				<li
-					className={className}
-					key={key}
-					data-animation-id={key}
-					data-animation-index={index}
-				>
-					{getTestProgressIcon(status)}
+				<li className={className} key={key} data-animation-id={key} data-animation-index={index}>
+					{getTestProgressIcon(test.status)}
 					{text}
+					{!!test.filesCount && `${test.filesDone}/${test.filesCount}`}
 				</li>
 			);
 		},

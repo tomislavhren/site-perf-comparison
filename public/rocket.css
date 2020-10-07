@@ -2142,19 +2142,11 @@ textarea[disabled] {
 	z-index: 1;
 }
 .test__scroll::before {
-	background: linear-gradient(
-		to bottom,
-		#e9f6f9 0%,
-		rgba(233, 246, 249, 0) 100%
-	);
+	background: linear-gradient(to bottom, #e9f6f9 0%, rgba(233, 246, 249, 0) 100%);
 	top: 0;
 }
 .test__scroll::after {
-	background: linear-gradient(
-		to bottom,
-		rgba(233, 246, 249, 0) 0%,
-		#e9f6f9 100%
-	);
+	background: linear-gradient(to bottom, rgba(233, 246, 249, 0) 0%, #e9f6f9 100%);
 	bottom: 0;
 }
 .test__scroll ul {
@@ -2375,7 +2367,7 @@ textarea[disabled] {
 	font-family: 'Font Awesome 5 Brands';
 	font-style: normal;
 	font-weight: 400;
-	src: url('../fonts/fontawesome/fa-brands-400.woff2') format('woff2');
+	src: url('./fonts/fontawesome/fa-brands-400.woff2') format('woff2');
 }
 .fab {
 	font-family: 'Font Awesome 5 Brands';
@@ -9465,7 +9457,7 @@ textarea[disabled] {
 	font-family: 'Font Awesome 5 Pro';
 	font-style: normal;
 	font-weight: 300;
-	src: url('../fonts/fontawesome/fa-light-300.woff2') format('woff2');
+	src: url('./fonts/fontawesome/fa-light-300.woff2') format('woff2');
 }
 .fal {
 	font-family: 'Font Awesome 5 Pro';
@@ -9476,8 +9468,7 @@ textarea[disabled] {
 	font-family: 'Montserrat';
 	font-style: normal;
 	font-weight: 700;
-	src: local('Montserrat Bold'), local('Montserrat-Bold'),
-		url('../fonts/montserrat/montserrat-bold.woff2') format('woff2');
+	src: local('Montserrat Bold'), local('Montserrat-Bold'), url('./fonts/Montserrat/Montserrat-Bold.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
@@ -9485,7 +9476,7 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 700;
 	src: local('Montserrat Bold Italic'), local('Montserrat-BoldItalic'),
-		url('../fonts/montserrat/montserrat-bold-italic.woff2') format('woff2');
+		url('./fonts/Montserrat/Montserrat-BoldItalic.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
@@ -9493,7 +9484,7 @@ textarea[disabled] {
 	font-style: normal;
 	font-weight: 400;
 	src: local('Montserrat Regular'), local('Montserrat-Regular'),
-		url('../fonts/montserrat/montserrat-regular.woff2') format('woff2');
+		url('./fonts/Montserrat/Montserrat-Regular.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
@@ -9501,7 +9492,7 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 400;
 	src: local('Montserrat Italic'), local('Montserrat-Italic'),
-		url('../fonts/montserrat/montserrat-regular-italic.woff2') format('woff2');
+		url('./fonts/Montserrat/Montserrat-Italic.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
@@ -9509,7 +9500,7 @@ textarea[disabled] {
 	font-style: normal;
 	font-weight: 600;
 	src: local('Montserrat SemiBold'), local('Montserrat-SemiBold'),
-		url('../fonts/montserrat/montserrat-semibold.woff2') format('woff2');
+		url('./fonts/Montserrat/Montserrat-SemiBold.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
@@ -9517,15 +9508,14 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 600;
 	src: local('Montserrat SemiBold Italic'), local('Montserrat-SemiBoldItalic'),
-		url('../fonts/montserrat/montserrat-semibold-italic.woff2') format('woff2');
+		url('./fonts/Montserrat/Montserrat-SemiBoldItalic.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
 	font-family: 'PT Serif';
 	font-style: normal;
 	font-weight: 700;
-	src: local('PT Serif Bold'), local('PTSerif-Bold'),
-		url('../fonts/pt-serif/pt-serif-bold.woff2') format('woff2');
+	src: local('PT Serif Bold'), local('PTSerif-Bold'), url('./fonts/PT_Serif/PTSerif-Bold.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
@@ -9533,23 +9523,21 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 700;
 	src: local('PT Serif Bold Italic'), local('PTSerif-BoldItalic'),
-		url('../fonts/pt-serif/pt-serif-bold-italic.woff2') format('woff2');
+		url('./fonts/PT_Serif/PTSerif-BoldItalic.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
 	font-family: 'PT Serif';
 	font-style: normal;
 	font-weight: 400;
-	src: local('PT Serif'), local('PTSerif-Regular'),
-		url('../fonts/pt-serif/pt-serif-regular.woff2') format('woff2');
+	src: local('PT Serif'), local('PTSerif-Regular'), url('./fonts/PT_Serif/PTSerif-Regular.ttf') format('ttf');
 }
 @font-face {
 	font-display: swap;
 	font-family: 'PT Serif';
 	font-style: italic;
 	font-weight: 400;
-	src: local('PT Serif Italic'), local('PTSerif-Italic'),
-		url('../fonts/pt-serif/pt-serif-regular-italic.woff2') format('woff2');
+	src: local('PT Serif Italic'), local('PTSerif-Italic'), url('./fonts/PT_Serif/PTSerif-Italic.ttf') format('ttf');
 }
 .button {
 	align-items: center;
@@ -10554,11 +10542,7 @@ textarea[disabled] {
 .header__navigation-menu ul li[class*='current'] a {
 	transform: translateX(0.625rem);
 }
-.header__navigation-menu
-	ul
-	li[class*='current']
-	a
-	.header__navigation-menu-description {
+.header__navigation-menu ul li[class*='current'] a .header__navigation-menu-description {
 	color: #24a7ca;
 }
 .header__navigation-menu ul a {
@@ -10874,8 +10858,7 @@ textarea[disabled] {
 .shadow--s,
 .card.is-link:hover,
 .card.is-link.is-active {
-	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05),
-		0 0.125rem 0.625rem rgba(13, 55, 70, 0.1);
+	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05), 0 0.125rem 0.625rem rgba(13, 55, 70, 0.1);
 }
 .shadow--m,
 .tooltip__arrow::before,
@@ -10888,14 +10871,12 @@ textarea[disabled] {
 .section[style] .plan__toggle-tooltip,
 .header.is-sticky,
 .header__navigation-menu ul {
-	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05),
-		0 0.125rem 1.25rem rgba(13, 55, 70, 0.1);
+	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05), 0 0.125rem 1.25rem rgba(13, 55, 70, 0.1);
 }
 .shadow--l,
 .affiliate__table,
 .card.is-link {
-	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05),
-		0 0.125rem 2.5rem rgba(13, 55, 70, 0.2);
+	box-shadow: 0 0.125rem 0.25rem rgba(13, 55, 70, 0.05), 0 0.125rem 2.5rem rgba(13, 55, 70, 0.2);
 }
 .badge {
 	border-radius: 0.25rem;
@@ -11609,8 +11590,7 @@ textarea[disabled] {
 	color: #18647e !important;
 }
 .swiper--quote .swiper__slide {
-	transition: opacity 300ms cubic-bezier(0.2, 0.6, 0.3, 1),
-		transform 300ms cubic-bezier(0.2, 0.6, 0.3, 1);
+	transition: opacity 300ms cubic-bezier(0.2, 0.6, 0.3, 1), transform 300ms cubic-bezier(0.2, 0.6, 0.3, 1);
 	cursor: -webkit-grab;
 	cursor: grab;
 	flex: 0 0 100%;

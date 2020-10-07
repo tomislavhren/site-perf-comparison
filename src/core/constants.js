@@ -1,4 +1,4 @@
-export const testSequence = {
+export const TestSequence = {
 	VERIFY_URL: 'VERIFY_URL',
 	DOWNLOAD_HTML: 'DOWNLOAD_HTML',
 	DOWNLOAD_ASSETS: 'DOWNLOAD_ASSETS',
@@ -8,12 +8,12 @@ export const testSequence = {
 };
 
 export const testSequenceLabels = {
-	[testSequence.VERIFY_URL]: 'Verify site URL',
-	[testSequence.DOWNLOAD_HTML]: 'Download HTML',
-	[testSequence.DOWNLOAD_ASSETS]: 'Download CSS, JavaScript, Images...',
-	[testSequence.OPTIMIZE_ASSETS]: 'Optimize Images & Fonts',
-	[testSequence.INIT_CLONED_SITE]: 'Initialize Cloned Site on Rocket.net',
-	[testSequence.PERFORMING_TEST]: 'Performing Test',
+	[TestSequence.VERIFY_URL]: 'Verify site URL',
+	[TestSequence.DOWNLOAD_HTML]: 'Download HTML',
+	[TestSequence.DOWNLOAD_ASSETS]: 'Download CSS, JavaScript, Images...',
+	[TestSequence.OPTIMIZE_ASSETS]: 'Optimize Images & Fonts',
+	[TestSequence.INIT_CLONED_SITE]: 'Initialize Cloned Site on Rocket.net',
+	[TestSequence.PERFORMING_TEST]: 'Performing Test',
 };
 
 export const TestProgressStatus = {
@@ -23,19 +23,35 @@ export const TestProgressStatus = {
 };
 
 export const initialTestProgress = {
-	[testSequence.VERIFY_URL]: TestProgressStatus.PENDING,
-	[testSequence.DOWNLOAD_HTML]: TestProgressStatus.PENDING,
-	[testSequence.DOWNLOAD_ASSETS]: TestProgressStatus.PENDING,
-	[testSequence.OPTIMIZE_ASSETS]: TestProgressStatus.PENDING,
-	[testSequence.INIT_CLONED_SITE]: TestProgressStatus.PENDING,
-	[testSequence.PERFORMING_TEST]: TestProgressStatus.PENDING,
+	[TestSequence.VERIFY_URL]: { status: TestProgressStatus.PENDING },
+	[TestSequence.DOWNLOAD_HTML]: {
+		status: TestProgressStatus.PENDING,
+		filesDone: 0,
+		filesCount: 0,
+	},
+	[TestSequence.DOWNLOAD_ASSETS]: {
+		status: TestProgressStatus.PENDING,
+		filesDone: 0,
+		filesCount: 0,
+	},
+	[TestSequence.OPTIMIZE_ASSETS]: { status: TestProgressStatus.PENDING },
+	[TestSequence.INIT_CLONED_SITE]: { status: TestProgressStatus.PENDING },
+	[TestSequence.PERFORMING_TEST]: { status: TestProgressStatus.PENDING },
 };
 
 export const rerunTestProgress = {
-	[testSequence.VERIFY_URL]: TestProgressStatus.DONE,
-	[testSequence.DOWNLOAD_HTML]: TestProgressStatus.DONE,
-	[testSequence.DOWNLOAD_ASSETS]: TestProgressStatus.DONE,
-	[testSequence.OPTIMIZE_ASSETS]: TestProgressStatus.DONE,
-	[testSequence.INIT_CLONED_SITE]: TestProgressStatus.DONE,
-	[testSequence.PERFORMING_TEST]: TestProgressStatus.IN_PROGRESS,
+	[TestSequence.VERIFY_URL]: { status: TestProgressStatus.DONE },
+	[TestSequence.DOWNLOAD_HTML]: {
+		status: TestProgressStatus.DONE,
+		filesDone: 0,
+		filesCount: 0,
+	},
+	[TestSequence.DOWNLOAD_ASSETS]: {
+		status: TestProgressStatus.DONE,
+		filesDone: 0,
+		filesCount: 0,
+	},
+	[TestSequence.OPTIMIZE_ASSETS]: { status: TestProgressStatus.DONE },
+	[TestSequence.INIT_CLONED_SITE]: { status: TestProgressStatus.DONE },
+	[TestSequence.PERFORMING_TEST]: { status: TestProgressStatus.IN_PROGRESS },
 };

@@ -1,12 +1,7 @@
 import React from 'react';
 import * as service from '../../core/service';
 import * as utils from '../../core/utils';
-import {
-	testSequence,
-	TestProgressStatus,
-	initialTestProgress,
-	rerunTestProgress,
-} from '../../core/constants';
+import { TestSequence, TestProgressStatus, initialTestProgress, rerunTestProgress } from '../../core/constants';
 import TestProgressList from './TestProgressList';
 import TestComplete from './TestComplete';
 import * as qs from 'query-string';
@@ -20,9 +15,7 @@ const getInitialUrl = () => {
 		return '';
 	}
 
-	return /^https?:\/\/.+/.test(trimmedUrl)
-		? trimmedUrl
-		: `https://${trimmedUrl}`;
+	return /^https?:\/\/.+/.test(trimmedUrl) ? trimmedUrl : `https://${trimmedUrl}`;
 };
 
 const TestForm = ({ onStart, onSuccess }) => {
@@ -38,28 +31,110 @@ const TestForm = ({ onStart, onSuccess }) => {
 		...initialTestProgress,
 	});
 
+	const markAsInProgress = React.useCallback(
+		(key, filesDone, filesCount) => {
+			setTestSequenceProgress(prevState => ({
+				...prevState,
+				...(Array.isArray(key)
+					? key.reduce(
+							(acc, k) => ({
+								...acc,
+								[k]: {
+									...prevState[k],
+									status: TestProgressStatus.IN_PROGRESS,
+								},
+							}),
+							{}
+					  )
+					: { [key]: { status: TestProgressStatus.IN_PROGRESS, filesDone, filesCount } }),
+			}));
+		},
+		[setTestSequenceProgress]
+	);
+
+	const markAsDone = React.useCallback(
+		key => {
+			setTestSequenceProgress(prevState => ({
+				...prevState,
+				...(Array.isArray(key)
+					? key.reduce(
+							(acc, k) => ({
+								...acc,
+								[k]: {
+									...prevState[k],
+									status: TestProgressStatus.DONE,
+									filesDone: prevState[k].filesCount,
+								},
+							}),
+							{}
+					  )
+					: { [key]: { status: TestProgressStatus.DONE, filesDone: prevState[key].filesCount } }),
+			}));
+		},
+		[setTestSequenceProgress]
+	);
+
+	const waitAndMarkAsDone = React.useCallback(
+		async (key, time) => {
+			markAsInProgress(key);
+			await utils.wait(time);
+			markAsDone(key);
+		},
+		[markAsInProgress, markAsDone]
+	);
+
+	const cloneWebsite = React.useCallback(
+		async url => {
+			return new Promise(async (resolve, reject) => {
+				try {
+					// start "Download HTML" spinner
+					markAsInProgress(TestSequence.DOWNLOAD_HTML);
+
+					// start cloner and wait for job id
+					const jobId = await service.startCloner(url);
+
+					let receivedDownloadHtmlStatus = false;
+					let receivedDownloadFilesStatus = false;
+
+					// ping the cloner for the status update
+					const newUrl = await service.getClonerStatus(jobId, (status, data) => {
+						switch (status) {
+							case 'DOWNLOAD_HTML':
+								receivedDownloadHtmlStatus = true;
+								markAsInProgress(TestSequence.DOWNLOAD_HTML, data.filesDone, data.filesCount);
+								break;
+							case 'DOWNLOAD_FILES':
+								receivedDownloadFilesStatus = true;
+								markAsDone(TestSequence.DOWNLOAD_HTML);
+								markAsInProgress(TestSequence.DOWNLOAD_ASSETS, data.filesDone, data.filesCount);
+								break;
+							default:
+								throw new Error('UNKNOWN_CLONER_ERROR');
+						}
+					});
+
+					// if the cloner was really quick and we didn't get the time
+					// to receive any other status then SUCCESS
+					!receivedDownloadHtmlStatus && (await waitAndMarkAsDone(TestSequence.DOWNLOAD_HTML, 0.5));
+					!receivedDownloadFilesStatus && (await waitAndMarkAsDone(TestSequence.DOWNLOAD_ASSETS, 0.5));
+
+					// return the cloned url
+					resolve(newUrl);
+				} catch (error) {
+					reject(error);
+				}
+			});
+		},
+		[markAsDone, waitAndMarkAsDone, markAsInProgress]
+	);
+
 	const handleRunTest = React.useCallback(
 		async url => {
 			onStart();
 
 			// Helper methods
-			const updateTestSequenceProgress = (key, status) => {
-				setTestSequenceProgress(prevState => ({
-					...prevState,
-					[key]: status,
-				}));
-			};
-
-			const waitAndUpdateTestSequenceProgress = async (key, time) => {
-				updateTestSequenceProgress(key, TestProgressStatus.IN_PROGRESS);
-				await utils.wait(time);
-				updateTestSequenceProgress(key, TestProgressStatus.DONE);
-			};
-
 			const incrementTestAttempt = url => {
-				testAttemptRef.current[url] = testAttemptRef.current[url]
-					? testAttemptRef.current[url] + 1
-					: 1;
+				testAttemptRef.current[url] = testAttemptRef.current[url] ? testAttemptRef.current[url] + 1 : 1;
 				return testAttemptRef.current[url];
 			};
 
@@ -81,49 +156,19 @@ const TestForm = ({ onStart, onSuccess }) => {
 
 			let clonedWebsiteUrl = clonedUrl;
 			if (!isRerun) {
-				updateTestSequenceProgress(
-					testSequence.VERIFY_URL,
-					TestProgressStatus.IN_PROGRESS
-				);
-				clonedWebsiteUrl = await service.cloneWebsite(url);
+				await waitAndMarkAsDone(TestSequence.VERIFY_URL, 1);
+				clonedWebsiteUrl = await cloneWebsite(url);
 				setClonedUrl(clonedWebsiteUrl);
-
-				updateTestSequenceProgress(
-					testSequence.VERIFY_URL,
-					TestProgressStatus.DONE
-				);
-
-				// UX only, no logic
-				await waitAndUpdateTestSequenceProgress(testSequence.DOWNLOAD_HTML, 5);
-				await waitAndUpdateTestSequenceProgress(
-					testSequence.DOWNLOAD_ASSETS,
-					7
-				);
-				await waitAndUpdateTestSequenceProgress(
-					testSequence.OPTIMIZE_ASSETS,
-					5
-				);
-				await waitAndUpdateTestSequenceProgress(
-					testSequence.INIT_CLONED_SITE,
-					1
-				);
+				await waitAndMarkAsDone(TestSequence.OPTIMIZE_ASSETS, 2);
+				await waitAndMarkAsDone(TestSequence.INIT_CLONED_SITE, 1);
 			}
 
-			updateTestSequenceProgress(
-				testSequence.PERFORMING_TEST,
-				TestProgressStatus.IN_PROGRESS
-			);
-			const [
-				originalWebsitePerformanceResults,
-				clonedWebsitePerformanceResults,
-			] = await Promise.all([
+			markAsInProgress(TestSequence.PERFORMING_TEST);
+			const [originalWebsitePerformanceResults, clonedWebsitePerformanceResults] = await Promise.all([
 				service.fetchPerformanceResults(url),
 				service.fetchPerformanceResults(clonedWebsiteUrl),
 			]);
-			updateTestSequenceProgress(
-				testSequence.PERFORMING_TEST,
-				TestProgressStatus.DONE
-			);
+			markAsDone(TestSequence.PERFORMING_TEST);
 
 			// Shows "Your site is X% faster" banner
 			setIsTestComplete(true);
@@ -135,14 +180,13 @@ const TestForm = ({ onStart, onSuccess }) => {
 				clonedWebsitePerformanceResults
 			);
 
-			const pageLoadTimeDiff = utils.calculateDiffPercentage(
-				cloned.pageLoadTime.data,
-				original.pageLoadTime.data
-			);
+			const pageLoadTimeDiff = utils.calculateDiffPercentage(cloned.pageLoadTime.data, original.pageLoadTime.data);
 			setPageLoadTimeDiff(pageLoadTimeDiff);
+
+			// this will propagate performance results and show cards
 			onSuccess(original, cloned);
 		},
-		[setIsTestComplete, onSuccess, onStart, clonedUrl]
+		[markAsInProgress, markAsDone, waitAndMarkAsDone, setIsTestComplete, onSuccess, onStart, clonedUrl, cloneWebsite]
 	);
 
 	const currentAttemptNumber = testAttemptRef.current[originalUrl] || 0;
