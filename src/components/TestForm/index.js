@@ -155,6 +155,7 @@ const TestForm = ({ onStart, onSuccess }) => {
 				setIsTestInProgress(true);
 
 				// 4. reset to initial state if it's not a rerun
+				setError('');
 				setIsTestComplete(false);
 				setTestSequenceProgress({
 					...(isRerun ? rerunTestProgress : initialTestProgress),
