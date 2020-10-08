@@ -9475,7 +9475,7 @@ textarea[disabled] {
 	font-family: 'Montserrat';
 	font-style: normal;
 	font-weight: 700;
-	src: local('Montserrat Bold'), local('Montserrat-Bold'), url('./fonts/Montserrat/Montserrat-Bold.ttf') format('ttf');
+	src: local('Montserrat Bold'), local('Montserrat-Bold'), url('./fonts/Montserrat/Montserrat-Bold.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
@@ -9483,7 +9483,7 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 700;
 	src: local('Montserrat Bold Italic'), local('Montserrat-BoldItalic'),
-		url('./fonts/Montserrat/Montserrat-BoldItalic.ttf') format('ttf');
+		url('./fonts/Montserrat/Montserrat-BoldItalic.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
@@ -9491,7 +9491,7 @@ textarea[disabled] {
 	font-style: normal;
 	font-weight: 400;
 	src: local('Montserrat Regular'), local('Montserrat-Regular'),
-		url('./fonts/Montserrat/Montserrat-Regular.ttf') format('ttf');
+		url('./fonts/Montserrat/Montserrat-Regular.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
@@ -9499,7 +9499,7 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 400;
 	src: local('Montserrat Italic'), local('Montserrat-Italic'),
-		url('./fonts/Montserrat/Montserrat-Italic.ttf') format('ttf');
+		url('./fonts/Montserrat/Montserrat-Italic.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
@@ -9507,7 +9507,7 @@ textarea[disabled] {
 	font-style: normal;
 	font-weight: 600;
 	src: local('Montserrat SemiBold'), local('Montserrat-SemiBold'),
-		url('./fonts/Montserrat/Montserrat-SemiBold.ttf') format('ttf');
+		url('./fonts/Montserrat/Montserrat-SemiBold.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
@@ -9515,14 +9515,14 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 600;
 	src: local('Montserrat SemiBold Italic'), local('Montserrat-SemiBoldItalic'),
-		url('./fonts/Montserrat/Montserrat-SemiBoldItalic.ttf') format('ttf');
+		url('./fonts/Montserrat/Montserrat-SemiBoldItalic.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
 	font-family: 'PT Serif';
 	font-style: normal;
 	font-weight: 700;
-	src: local('PT Serif Bold'), local('PTSerif-Bold'), url('./fonts/PT_Serif/PTSerif-Bold.ttf') format('ttf');
+	src: local('PT Serif Bold'), local('PTSerif-Bold'), url('./fonts/PT_Serif/PTSerif-Bold.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
@@ -9530,21 +9530,21 @@ textarea[disabled] {
 	font-style: italic;
 	font-weight: 700;
 	src: local('PT Serif Bold Italic'), local('PTSerif-BoldItalic'),
-		url('./fonts/PT_Serif/PTSerif-BoldItalic.ttf') format('ttf');
+		url('./fonts/PT_Serif/PTSerif-BoldItalic.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
 	font-family: 'PT Serif';
 	font-style: normal;
 	font-weight: 400;
-	src: local('PT Serif'), local('PTSerif-Regular'), url('./fonts/PT_Serif/PTSerif-Regular.ttf') format('ttf');
+	src: local('PT Serif'), local('PTSerif-Regular'), url('./fonts/PT_Serif/PTSerif-Regular.ttf') format('truetype');
 }
 @font-face {
 	font-display: swap;
 	font-family: 'PT Serif';
 	font-style: italic;
 	font-weight: 400;
-	src: local('PT Serif Italic'), local('PTSerif-Italic'), url('./fonts/PT_Serif/PTSerif-Italic.ttf') format('ttf');
+	src: local('PT Serif Italic'), local('PTSerif-Italic'), url('./fonts/PT_Serif/PTSerif-Italic.ttf') format('truetype');
 }
 .button {
 	align-items: center;
