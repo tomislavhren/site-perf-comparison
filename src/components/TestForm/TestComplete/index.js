@@ -22,15 +22,14 @@ const TestComplete = ({ attemptNumber }) => {
 	return (
 		<ul className="test__setup">
 			<li>
-				Test Complete{' '}
-				<i className="fal fa-check color color--limeade margin margin--l-xxs"></i>
+				Test Complete <i className="fal fa-check color color--limeade margin margin--l-xxs"></i>
 			</li>
 			<li>
 				{attempt} load{' '}
 				<IconButtonWithTooltip
 					tooltipId="tooltip--first-load"
 					tooltipTitle={`${attempt} load`}
-					tooltipText="Lorem ipsum dolor, sit amet consectetur adipisicing elit. Magnam eaque doloribus, libero cupiditate ullam molestiae minus deserunt soluta nesciunt."
+					tooltipText="It's always better to run the test more than once to get a more accurate record, the first load is always slowest because the cache is just getting built up, most of the gains start after the second load."
 				>
 					<i className="fal fa-question-circle"></i>
 				</IconButtonWithTooltip>

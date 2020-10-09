@@ -20,15 +20,12 @@ const TimingItem = ({
 		const isFaster = percentageDiff <= 0;
 		const className = [
 			'card__gtmetrix-percentage',
-			isFaster
-				? 'card__gtmetrix-percentage--limeade'
-				: 'card__gtmetrix-percentage--milano-red',
+			isFaster ? 'card__gtmetrix-percentage--limeade' : 'card__gtmetrix-percentage--dusty-gray-light',
 		].join(' ');
 
 		return (
 			<span className={className}>
-				{toPercentageString(percentageDiff)}{' '}
-				{isFaster ? positiveLabel : negativeLabel}
+				{toPercentageString(percentageDiff)} {isFaster ? positiveLabel : negativeLabel}
 			</span>
 		);
 	}, [percentageDiff, positiveLabel, negativeLabel]);
@@ -36,17 +33,11 @@ const TimingItem = ({
 	return (
 		<ul className="card__gtmetrix-results-result">
 			<li>
-				<span className={highlighted ? 'color color--curious-blue' : ''}>
-					{result}
-				</span>
+				<span className={highlighted ? 'color color--curious-blue' : ''}>{result}</span>
 			</li>
 			<li>
 				{label}
-				<IconButtonWithTooltip
-					tooltipTitle={tooltipTitle}
-					tooltipText={tooltipText}
-					tooltipId={tooltipId}
-				>
+				<IconButtonWithTooltip tooltipTitle={tooltipTitle} tooltipText={tooltipText} tooltipId={tooltipId}>
 					<i className="fal fa-question-circle" />
 				</IconButtonWithTooltip>
 			</li>

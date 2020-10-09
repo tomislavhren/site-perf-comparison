@@ -13,15 +13,7 @@ const formatYSlowScore = score => `${getGrade(score)} (${score}%)`;
 
 const formatPageSpeedScore = score => `${getGrade(score)} (${score}*%)`;
 
-const GTMetrix = ({
-	reportUrl,
-	ttfb,
-	firstPaintTime,
-	pageLoadTime,
-	pageSpeedScore,
-	ySlowScore,
-	isRocket,
-}) => {
+const GTMetrix = ({ reportUrl, ttfb, firstPaintTime, pageLoadTime, pageSpeedScore, ySlowScore, isRocket }) => {
 	const tooltipSuffix = isRocket ? 'rocket' : 'origin';
 
 	return (
@@ -51,6 +43,9 @@ const GTMetrix = ({
 					percentageDiff={pageLoadTime.diff}
 					label="Page Load Time"
 					highlighted={isRocket}
+					tooltipId={`tooltip--page-load-${tooltipSuffix}`}
+					tooltipTitle="Page Load Time / Onload Time"
+					tooltipText="This is the total time elapsed until the processing of the page is complete and all the resources on the page (images, CSS, etc.) have finished downloading. This is also the same time that DOM complete occurs and the JavaScript window.onload event fires."
 				/>
 				<TimingItem
 					result={formatPageSpeedScore(pageSpeedScore.data)}
