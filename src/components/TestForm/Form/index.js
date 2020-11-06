@@ -1,34 +1,28 @@
 import React from 'react';
-import * as qs from 'query-string';
 import { sanitizeAndValidateURL } from '../../../core/utils';
 
-const getInitialUrl = () => {
-	const { url: initialUrl = '' } = qs.parse(window.location.search);
-	const trimmedUrl = initialUrl.trim();
-	if (!trimmedUrl) {
-		return '';
-	}
-
-	return /^https?:\/\/.+/.test(trimmedUrl)
-		? trimmedUrl
-		: `https://${trimmedUrl}`;
-};
-
 const Form = ({ isTestInProgress, isRerun, onSubmit, defaultUrl }) => {
-	const inputRef = React.useRef(getInitialUrl());
+	const inputRef = React.useRef();
+	const formRef = React.useRef();
 
 	const handleSubmit = React.useCallback(
 		e => {
-			e.preventDefault();
+			e && e.preventDefault();
 			const url = sanitizeAndValidateURL(inputRef.current.value);
 			onSubmit(url);
 		},
 		[onSubmit]
 	);
 
+	React.useEffect(() => {
+		if (defaultUrl) {
+			handleSubmit();
+		}
+	}, []);
+
 	return (
 		<div className="test__form">
-			<form onSubmit={handleSubmit}>
+			<form ref={formRef} onSubmit={handleSubmit}>
 				<div className="field field--xl field--white">
 					<div className="field__helper">
 						<input
@@ -44,8 +38,7 @@ const Form = ({ isTestInProgress, isRerun, onSubmit, defaultUrl }) => {
 							type="submit"
 							className="button button--l button--curious-blue button--fill"
 						>
-							<i className="fal fa-stopwatch margin margin--r-s"></i>{' '}
-							{isRerun ? 'Rerun test' : 'Run test'}
+							<i className="fal fa-stopwatch margin margin--r-s"></i> {isRerun ? 'Rerun test' : 'Run test'}
 						</button>
 					</div>
 				</div>
